@@ -44,6 +44,8 @@ class PreConstruction(models.Model):
     ]
 
     developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
+    builder_sales_email = models.CharField(max_length=500)
+    builder_sales_phone = models.CharField(max_length=500)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     project_name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
@@ -53,13 +55,9 @@ class PreConstruction(models.Model):
         max_length=500, choices=PROJECT_CHOICES, default="NaN")
     description = SummernoteTextField(blank=True)
     project_address = models.CharField(max_length=500)
-    postalcode = models.CharField(max_length=200)
-    latitute = models.CharField(max_length=10)
-    longitude = models.CharField(max_length=10)
     status = models.CharField(
         max_length=500, choices=STATUS_CHOICES, default="Upcoming")
-    assignment_closure_type = models.CharField(
-        max_length=500, choices=ASSIGNMENT_CHOICES, default="Free")
+    co_op_available = models.BooleanField(default=False)
     date_of_upload = models.DateField(auto_now_add=True)
     last_updated = models.DateField(auto_now=True)
 
@@ -92,7 +90,6 @@ class PreConstructionFloorPlan(models.Model):
 
 
 class Event(models.Model):
-    event_title = models.CharField(max_length=1000)
     event_description = SummernoteTextField(blank=True)
     event_date = models.DateTimeField()
     event_link = models.CharField(max_length=2000, default="#")
@@ -102,6 +99,7 @@ class Event(models.Model):
 
 
 class News(models.Model):
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
     news_title = models.CharField(max_length=1000)
     news_thumbnail = models.FileField(blank=True)
     news_description = SummernoteTextField(blank=True)
@@ -118,3 +116,17 @@ class Favourite(models.Model):
         Agent, on_delete=models.CASCADE, related_name="agent")
     preconstruction = models.ForeignKey(
         PreConstruction, on_delete=models.CASCADE, related_name="preconstruction")
+
+
+class FavouriteNews(models.Model):
+    agent = models.ForeignKey(
+        Agent, on_delete=models.CASCADE, related_name="agent")
+    news = models.ForeignKey(
+        News, on_delete=models.CASCADE, related_name="news")
+
+
+class FavouriteEvent(models.Model):
+    agent = models.ForeignKey(
+        Agent, on_delete=models.CASCADE, related_name="agent")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="event")
