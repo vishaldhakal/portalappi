@@ -8,7 +8,7 @@ SECRET_KEY = '6phatry1)!$p*oipu*d)#e1h)1k7c7lre807@v*2&p*$2es8b*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,7 +47,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'homebaba_api.urls'
-
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
