@@ -1,6 +1,9 @@
 from django.db import models
 from django_summernote.fields import SummernoteTextField
 from accounts.models import Agent
+from django.utils.text import slugify
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 class Developer(models.Model):
@@ -16,9 +19,21 @@ class Developer(models.Model):
 
 class City(models.Model):
     name = models.CharField(max_length=500)
+    slug = models.CharField(max_length=1000, unique=True)
 
     def __str__(self):
         return self.name
+
+
+@receiver(pre_save, sender=City)
+def pre_save_slug(sender, instance, *args, **kwargs):
+    base_slug = slugify(instance.name)
+    unique_slug = base_slug
+    num = 1
+    while City.objects.filter(slug=unique_slug).exists():
+        unique_slug = base_slug + "-" + str(num)
+        num += 1
+    instance.slug = unique_slug
 
 
 class PreConstruction(models.Model):
@@ -66,6 +81,17 @@ class PreConstruction(models.Model):
 
     class Meta:
         ordering = ('-date_of_upload',)
+
+
+@receiver(pre_save, sender=PreConstruction)
+def pre_save_slug(sender, instance, *args, **kwargs):
+    base_slug = slugify(instance.project_name)
+    unique_slug = base_slug
+    num = 1
+    while PreConstruction.objects.filter(slug=unique_slug).exists():
+        unique_slug = base_slug + "-" + str(num)
+        num += 1
+    instance.slug = unique_slug
 
 
 class PreConstructionImage(models.Model):
@@ -120,13 +146,13 @@ class Favourite(models.Model):
 
 class FavouriteNews(models.Model):
     agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name="agent")
+        Agent, on_delete=models.CASCADE, related_name="news_agent")
     news = models.ForeignKey(
         News, on_delete=models.CASCADE, related_name="news")
 
 
 class FavouriteEvent(models.Model):
     agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name="agent")
+        Agent, on_delete=models.CASCADE, related_name="event_agent")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="event")
