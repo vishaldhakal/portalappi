@@ -100,7 +100,7 @@ class PreConstructionImage(models.Model):
     image = models.FileField()
 
     def __str__(self):
-        if self.images:
+        if self.image:
             return self.image.url
         else:
             return "/media/no-image.webp"
@@ -119,6 +119,7 @@ class Event(models.Model):
     event_description = SummernoteTextField(blank=True)
     event_date = models.DateTimeField()
     event_link = models.CharField(max_length=2000, default="#")
+    event_title = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
         return self.event_title
