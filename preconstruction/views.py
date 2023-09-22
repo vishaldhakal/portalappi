@@ -184,6 +184,7 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         return Response(serializer.data)
 
 
+@api_view(['GET'])
 def PreConstructionDetailView(request, slug):
     preconstruction = PreConstruction.objects.get(slug=slug)
     serializer = PreConstructionSerializer(preconstruction)
