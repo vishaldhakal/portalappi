@@ -184,6 +184,12 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         return Response(serializer.data)
 
 
+def PreConstructionDetailView(request, slug):
+    preconstruction = PreConstruction.objects.get(slug=slug)
+    serializer = PreConstructionSerializer(preconstruction)
+    return Response(serializer.data)
+
+
 class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer

@@ -37,6 +37,7 @@ class PreConstructionSerializer(serializers.ModelSerializer):
     image = PreConstructionImageSerializer(many=True, read_only=True)
     floorplan = PreConstructionFloorPlanSerializer(many=True, read_only=True)
     city = CitySerializer()
+    developer = DeveloperSerializer()
 
     class Meta:
         model = PreConstruction
