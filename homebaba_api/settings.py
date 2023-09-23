@@ -130,7 +130,7 @@ STATICFILES_DIRS = [
 ]
 
 
-MEDIA_URL = 'media/'
+MEDIA_URL = 'https://api.condomonk.ca/media/'
 
 MEDIA_ROOT = Path(BASE_DIR, 'media')
 
