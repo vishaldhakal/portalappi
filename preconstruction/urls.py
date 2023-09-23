@@ -27,7 +27,7 @@ urlpatterns = [
          name='preconstruction-list-create'),
     path('preconstructions/<int:pk>/', PreConstructionRetrieveUpdateDeleteView.as_view(),
          name='preconstruction-retrieve-update-delete'),
-    path('preconstructions-city/<str:name>/', PreConstructionsCityView,
+    path('preconstructions-city/<str:slug>/', PreConstructionsCityView,
          name='preconstruction-city'),
     path('preconstructions-detail/<str:slug>/', PreConstructionDetailView,
          name='preconstruction-retrieve'),
