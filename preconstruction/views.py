@@ -191,6 +191,13 @@ def PreConstructionDetailView(request, slug):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
+def PreConstructionsCityView(request, slug):
+    preconstructions = PreConstruction.objects.filter(city__slug=slug)
+    serializer = PreConstructionSerializer(preconstructions, many=True)
+    return Response(serializer.data)
+
+
 class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
