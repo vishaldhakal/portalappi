@@ -127,36 +127,25 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         data = request.data
-        developer_id = data.get('developer')
-        city_id = data.get('city')
+        developer_id = data.get('predata[developer][id]')
+        city_id = data.get('predata[city][id]')
         developer = Developer.objects.get(id=developer_id)
         city = City.objects.get(id=city_id)
-        project_name = data.get('project_name')
-
-        project_type = data.get('project_type')
-        status = data.get('status')
-        project_address = data.get('project_address')
-        description = data.get('description')
-        co_op_available = data.get('co_op_available')
-        price_starting_from = data.get('price_starting_from')
-        price_to = data.get('price_to')
-        builder_sales_email = data.get('builder_sales_email')
-        builder_sales_phone = data.get('builder_sales_phone')
-
-        """Generate slug from project name with unique in case of same name"""
-        base_slug = slugify(project_name)
-        unique_slug = base_slug
-        num = 1
-        while PreConstruction.objects.filter(slug=unique_slug).exists():
-            unique_slug = base_slug + "-" + str(num)
-            num += 1
-
-        slug = unique_slug
+        project_name = data.get('predata[project_name]')
+        project_type = data.get('predata[project_type]')
+        status = data.get('predata[status]')
+        project_address = data.get('predata[project_address]')
+        description = data.get('predata[description]')
+        co_op = data.get('predata[co_op_available]')
+        co_op_available = True if co_op == "true" else False
+        price_starting_from = data.get('predata[price_starting_from]')
+        price_to = data.get('predata[price_to]')
+        builder_sales_email = data.get('predata[builder_sales_email]')
+        builder_sales_phone = data.get('predata[builder_sales_phone]')
 
         instance.developer = developer
         instance.city = city
         instance.project_name = project_name
-        instance.slug = slug
         instance.project_type = project_type
         instance.status = status
         instance.project_address = project_address
@@ -166,6 +155,7 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         instance.price_to = price_to
         instance.builder_sales_email = builder_sales_email
         instance.builder_sales_phone = builder_sales_phone
+        instance.slug = slugify(project_name)
 
         """ Save images """
         images = request.FILES.getlist('image')
