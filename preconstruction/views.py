@@ -158,13 +158,13 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         instance.slug = slugify(project_name)
 
         """ Save images """
-        images = request.FILES.getlist('image')
+        images = request.FILES.getlist('images[]')
         for image in images:
             PreConstructionImage.objects.create(
                 preconstruction=instance, image=image)
 
         """ Save floorplans """
-        floorplans = request.FILES.getlist('floorplan')
+        floorplans = request.FILES.getlist('plans[]')
         for floorplan in floorplans:
             PreConstructionFloorPlan.objects.create(
                 preconstruction=instance, floorplan=floorplan)
