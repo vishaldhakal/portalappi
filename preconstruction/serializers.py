@@ -15,6 +15,12 @@ class CitySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CitySerializerSmall(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'slug']
+
+
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
@@ -38,6 +44,15 @@ class PreConstructionSerializer(serializers.ModelSerializer):
     floorplan = PreConstructionFloorPlanSerializer(many=True, read_only=True)
     city = CitySerializer()
     developer = DeveloperSerializer()
+
+    class Meta:
+        model = PreConstruction
+        fields = '__all__'
+
+
+class PreConstructionSerializerSmall(serializers.ModelSerializer):
+    image = PreConstructionImageSerializer(many=True, read_only=True)
+    city = CitySerializerSmall()
 
     class Meta:
         model = PreConstruction
