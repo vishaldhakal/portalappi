@@ -284,10 +284,6 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         city_details = request.data.get('details')
         base_slug = slugify(request.data.get('name'))
         unique_slug = base_slug
-        num = 1
-        while City.objects.filter(slug=unique_slug).exists():
-            unique_slug = base_slug + "-" + str(num)
-            num += 1
         instance.slug = unique_slug
         instance.details = city_details
         instance.save()
