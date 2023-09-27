@@ -73,8 +73,8 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         co_op_available = True if co_op == "true" else False
         price_starting_from = data.get('predata[price_starting_from]')
         price_to = data.get('predata[price_to]')
-        builder_sales_email = data.get('predata[builder_sales_email]')
-        builder_sales_phone = data.get('predata[builder_sales_phone]')
+        occupancy = data.get('predata[occupancy]')
+        no_of_units = data.get('predata[no_of_units]')
 
         """Generate slug from project name with unique in case of same name"""
         base_slug = slugify(project_name)
@@ -98,8 +98,8 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
             co_op_available=co_op_available,
             price_starting_from=price_starting_from,
             price_to=price_to,
-            builder_sales_email=builder_sales_email,
-            builder_sales_phone=builder_sales_phone
+            occupancy=occupancy,
+            no_of_units=no_of_units
         )
 
         """ Save images from images received """
@@ -140,8 +140,8 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         co_op_available = True if co_op == "true" else False
         price_starting_from = data.get('predata[price_starting_from]')
         price_to = data.get('predata[price_to]')
-        builder_sales_email = data.get('predata[builder_sales_email]')
-        builder_sales_phone = data.get('predata[builder_sales_phone]')
+        occupancy = data.get('predata[occupancy]')
+        no_of_units = data.get('predata[no_of_units]')
 
         instance.developer = developer
         instance.city = city
@@ -153,8 +153,8 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         instance.co_op_available = co_op_available
         instance.price_starting_from = price_starting_from
         instance.price_to = price_to
-        instance.builder_sales_email = builder_sales_email
-        instance.builder_sales_phone = builder_sales_phone
+        instance.occupancy = occupancy
+        instance.no_of_units = no_of_units
         instance.slug = slugify(project_name)
 
         """ Save images """
@@ -259,13 +259,15 @@ class CityListCreateView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         city_name = data.get('name')
+        city_details = data.get('details')
         base_slug = slugify(city_name)
         unique_slug = base_slug
         num = 1
         while City.objects.filter(slug=unique_slug).exists():
             unique_slug = base_slug + "-" + str(num)
             num += 1
-        city = City.objects.create(name=city_name, slug=unique_slug)
+        city = City.objects.create(
+            name=city_name, slug=unique_slug, details=city_details)
         serializer = CitySerializer(city)
         return Response(serializer.data)
 
@@ -277,6 +279,7 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.name = request.data.get('name')
+        city_details = data.get('details')
         base_slug = slugify(request.data.get('name'))
         unique_slug = base_slug
         num = 1
@@ -284,6 +287,7 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
             unique_slug = base_slug + "-" + str(num)
             num += 1
         instance.slug = unique_slug
+        instance.details = city_details
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)

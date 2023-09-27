@@ -20,6 +20,7 @@ class Developer(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
+    details = SummernoteTextField(blank=True)
 
     def __str__(self):
         return self.name
@@ -59,8 +60,8 @@ class PreConstruction(models.Model):
     ]
 
     developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
-    builder_sales_email = models.CharField(max_length=500)
-    builder_sales_phone = models.CharField(max_length=500)
+    occupancy = models.CharField(max_length=500)
+    no_of_units = models.CharField(max_length=500)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     project_name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
