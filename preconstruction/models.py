@@ -87,7 +87,7 @@ class PreConstruction(models.Model):
         return self.project_name + " [ " + self.city.name+" ] "
 
     class Meta:
-        ordering = ('-last_updated',)
+        ordering = ('last_updated',)
 
 
 @receiver(pre_save, sender=PreConstruction)
