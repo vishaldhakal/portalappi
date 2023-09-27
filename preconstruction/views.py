@@ -301,3 +301,17 @@ class FavouriteListCreateView(generics.ListCreateAPIView):
 class FavouriteRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Favourite.objects.all()
     serializer_class = FavouriteSerializer
+
+
+@api_view(['DELETE'])
+def delete_image(request, pk):
+    image = PreConstructionImage.objects.get(id=pk)
+    image.delete()
+    return JsonResponse("Deleted Successfully", safe=False)
+
+
+@api_view(['DELETE'])
+def delete_floorplan(request, pk):
+    floorplan = PreConstructionFloorPlan.objects.get(id=pk)
+    floorplan.delete()
+    return JsonResponse("Deleted Successfully", safe=False)

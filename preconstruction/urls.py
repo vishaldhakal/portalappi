@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView, DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView
+from .views import DeveloperListCreateView, DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -32,6 +32,8 @@ urlpatterns = [
     path('preconstructions-detail/<str:slug>/', PreConstructionDetailView,
          name='preconstruction-retrieve'),
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
+    path('delete-image/<int:pk>/', delete_image, name='delete_image'),
+    path('delete-floorplan/<int:pk>/', delete_floorplan, name='delete_floorplan'),
     path('events/<int:pk>/', EventRetrieveUpdateDeleteView.as_view(),
          name='event-retrieve-update-delete'),
     path('news/', NewsListCreateView.as_view(), name='news-list-create'),
