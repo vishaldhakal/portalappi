@@ -279,7 +279,7 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.name = request.data.get('name')
-        city_details = data.get('details')
+        city_details = request.data.get('details')
         base_slug = slugify(request.data.get('name'))
         unique_slug = base_slug
         num = 1
