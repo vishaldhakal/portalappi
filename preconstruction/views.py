@@ -53,9 +53,16 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CitySerializer
 
 
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
+
 class PreConstructionListCreateView(generics.ListCreateAPIView):
     queryset = PreConstruction.objects.all()
     serializer_class = PreConstructionSerializer
+    pagination_class = LargeResultsSetPagination
 
     def create(self, request, *args, **kwargs):
         data = request.data
