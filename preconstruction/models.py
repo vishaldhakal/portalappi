@@ -16,6 +16,9 @@ class Developer(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class City(models.Model):
     name = models.CharField(max_length=500)
@@ -24,6 +27,9 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 
 @receiver(pre_save, sender=City)
@@ -81,7 +87,7 @@ class PreConstruction(models.Model):
         return self.project_name + " [ " + self.city.name+" ] "
 
     class Meta:
-        ordering = ('-date_of_upload',)
+        ordering = ('-last_updated',)
 
 
 @receiver(pre_save, sender=PreConstruction)
