@@ -81,7 +81,7 @@ class PreConstruction(models.Model):
         max_length=500, choices=STATUS_CHOICES, default="Upcoming")
     co_op_available = models.BooleanField(default=False)
     date_of_upload = models.DateField(auto_now_add=True)
-    last_updated = models.DateField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.project_name + " [ " + self.city.name+" ] "
