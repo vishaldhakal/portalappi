@@ -32,17 +32,6 @@ class City(models.Model):
         ordering = ['name']
 
 
-@receiver(pre_save, sender=City)
-def pre_save_slug(sender, instance, *args, **kwargs):
-    base_slug = slugify(instance.name)
-    unique_slug = base_slug
-    num = 1
-    while City.objects.filter(slug=unique_slug).exists():
-        unique_slug = base_slug + "-" + str(num)
-        num += 1
-    instance.slug = unique_slug
-
-
 class PreConstruction(models.Model):
 
     STATUS_CHOICES = [
@@ -88,17 +77,6 @@ class PreConstruction(models.Model):
 
     class Meta:
         ordering = ('-last_updated',)
-
-
-@receiver(pre_save, sender=PreConstruction)
-def pre_save_slug(sender, instance, *args, **kwargs):
-    base_slug = slugify(instance.project_name)
-    unique_slug = base_slug
-    num = 1
-    while PreConstruction.objects.filter(slug=unique_slug).exists():
-        unique_slug = base_slug + "-" + str(num)
-        num += 1
-    instance.slug = unique_slug
 
 
 class PreConstructionImage(models.Model):
