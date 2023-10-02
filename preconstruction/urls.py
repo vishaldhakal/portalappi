@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView, DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city
+from .views import DeveloperListCreateView, DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -31,6 +31,8 @@ urlpatterns = [
          name='preconstruction-city'),
     path('preconstructions-detail/<str:slug>/', PreConstructionDetailView,
          name='preconstruction-retrieve'),
+    path('related-precons/<str:slug>/',
+         get_related_precons, name='related-precons'),
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
     path('delete-image/<int:pk>/', delete_image, name='delete_image'),
     path('delete-floorplan/<int:pk>/', delete_floorplan, name='delete_floorplan'),

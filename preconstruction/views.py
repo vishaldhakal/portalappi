@@ -182,6 +182,13 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
 
 
 @api_view(['GET'])
+def get_related_precons(request, city):
+    precons = PreConstruction.objects.filter(city__slug=city)[:4]
+    serializer = PreConstructionSerializerSmall(precons, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def remove_last_part_of_slug(request):
     precons = PreConstruction.objects.all()
     for precon in precons:
