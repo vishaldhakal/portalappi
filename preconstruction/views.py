@@ -335,3 +335,10 @@ def delete_floorplan(request, pk):
     floorplan = PreConstructionFloorPlan.objects.get(id=pk)
     floorplan.delete()
     return JsonResponse("Deleted Successfully", safe=False)
+
+
+@api_view(['GET'])
+def get_all_city(request):
+    cities = City.objects.all()
+    serializer = CitySerializerSmall(cities, many=True)
+    return Response(serializer.data)
