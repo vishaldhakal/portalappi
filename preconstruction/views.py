@@ -189,6 +189,8 @@ def remove_last_part_of_slug(request):
         # check if last part is no
         if re.match(r'\d+', slug[-1]):
             new_str = '-'.join(slug[:-1])
+            if PreConstruction.objects.filter(slug=new_str).exists():
+                new_str = new_str + "-" + str(precon.id)
             precon.slug = new_str
             precon.save()
     return Response({"message": "done"})
