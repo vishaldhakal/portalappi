@@ -126,14 +126,6 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
     queryset = PreConstruction.objects.all()
     serializer_class = PreConstructionSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = PreConstructionSerializer(instance)
-        related = PreConstruction.objects.filter(
-            city=instance.city).exclude(id=instance.id)[:4]
-        presmallser = PreConstructionSerializerSmall(related, many=True)
-        return Response({"data": serializer.data, "related": presmallser.data})
-
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         data = request.data
@@ -189,7 +181,7 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         return Response(serializer.data)
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def remove_last_part_of_slug(request):
     precons = PreConstruction.objects.all()
     for precon in precons:
@@ -204,14 +196,14 @@ def remove_last_part_of_slug(request):
     return Response({"message": "done"})
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def PreConstructionDetailView(request, slug):
     preconstruction = PreConstruction.objects.get(slug=slug)
     serializer = PreConstructionSerializer(preconstruction)
     return Response(serializer.data)
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def PreConstructionsCityView(request, slug):
     city = City.objects.get(slug=slug)
     cityser = CitySerializer(city)
@@ -331,21 +323,21 @@ class FavouriteRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FavouriteSerializer
 
 
-@ api_view(['DELETE'])
+@api_view(['DELETE'])
 def delete_image(request, pk):
     image = PreConstructionImage.objects.get(id=pk)
     image.delete()
     return JsonResponse("Deleted Successfully", safe=False)
 
 
-@ api_view(['DELETE'])
+@api_view(['DELETE'])
 def delete_floorplan(request, pk):
     floorplan = PreConstructionFloorPlan.objects.get(id=pk)
     floorplan.delete()
     return JsonResponse("Deleted Successfully", safe=False)
 
 
-@ api_view(['GET'])
+@api_view(['GET'])
 def get_all_city(request):
     cities = City.objects.all()
     serializer = CitySerializerSmall(cities, many=True)
