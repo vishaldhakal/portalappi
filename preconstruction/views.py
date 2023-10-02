@@ -189,6 +189,7 @@ def remove_last_part_of_slug(request):
         new_str = '-'.join(slug[:-1])
         precon.slug = new_str
         precon.save()
+    return Response({"message": "done"})
 
 
 @api_view(['GET'])
