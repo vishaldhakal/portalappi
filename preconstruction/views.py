@@ -186,9 +186,11 @@ def remove_last_part_of_slug(request):
     precons = PreConstruction.objects.all()
     for precon in precons:
         slug = precon.slug.split('-')
-        new_str = '-'.join(slug[:-1])
-        precon.slug = new_str
-        precon.save()
+        # check if last part is no
+        if re.match(r'\d+', slug[-1]):
+            new_str = '-'.join(slug[:-1])
+            precon.slug = new_str
+            precon.save()
     return Response({"message": "done"})
 
 
