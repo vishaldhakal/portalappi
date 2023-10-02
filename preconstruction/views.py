@@ -84,14 +84,9 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         no_of_units = data.get('predata[no_of_units]')
 
         """Generate slug from project name with unique in case of same name"""
-        base_slug = slugify(project_name)
-        unique_slug = base_slug
-        num = 1
-        while PreConstruction.objects.filter(slug=unique_slug).exists():
-            unique_slug = base_slug + "-" + str(num)
-            num += 1
-
-        slug = unique_slug
+        slug = slugify(project_name)
+        if PreConstruction.objects.filter(slug=slug).exists():
+            slug = f'{slug}-{PreConstruction.objects.all().count()}'
 
         preconstruction = PreConstruction.objects.create(
             developer=developer,
@@ -162,7 +157,12 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         instance.price_to = price_to
         instance.occupancy = occupancy
         instance.no_of_units = no_of_units
-        instance.slug = slugify(project_name)
+
+        if instance.slug != slugify(project_name):
+            if PreConstruction.objects.filter(slug=slugify(project_name)).exists():
+                instance.slug = slugify(project_name) + "-" + str(instance.id)
+            else:
+                instance.slug = slugify(project_name)
 
         """ Save images """
         images = request.FILES.getlist('images[]')
@@ -179,6 +179,16 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         instance.save()
         serializer = PreConstructionSerializer(instance)
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def remove_last_part_of_slug(request):
+    precons = PreConstruction.objects.all()
+    for precon in precons:
+        slug = precon.slug.split('-')
+        new_str = '-'.join(slug[:-1])
+        precon.slug = new_str
+        precon.save()
 
 
 @api_view(['GET'])
