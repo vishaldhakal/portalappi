@@ -31,7 +31,7 @@ urlpatterns = [
          name='preconstruction-city'),
     path('preconstructions-detail/<str:slug>/', PreConstructionDetailView,
          name='preconstruction-retrieve'),
-    path('related-precons/<str:slug>/',
+    path('related-precons/<str:city>/',
          get_related_precons, name='related-precons'),
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
     path('delete-image/<int:pk>/', delete_image, name='delete_image'),
