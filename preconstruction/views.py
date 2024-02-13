@@ -350,6 +350,52 @@ def get_all_city(request):
     serializer = CitySerializerSmall(cities, many=True)
     return Response(serializer.data)
 
+def validate_name(name):
+    """
+    Validates the name field.
+    Returns True if name is valid, False otherwise.
+    """
+    if not name:
+        return False
+    # Add additional name validation logic here if needed
+    return True
+
+
+def validate_email(email):
+    """
+    Validates the email field.
+    Returns True if email is valid, False otherwise.
+    """
+    if not email:
+        return False
+    if '@' not in email:
+        return False
+    # Add additional email validation logic here if needed
+    return True
+
+
+def validate_phone(phone):
+    """
+    Validates the phone field.
+    Returns True if phone is valid, False otherwise.
+    """
+    if not phone:
+        return False
+    # Add additional phone validation logic here if needed
+    return True
+
+
+def validate_message(message):
+    """
+    Validates the message field.
+    Returns True if message is valid, False otherwise.
+    """
+    if not message:
+        return False
+    # Add additional message validation logic here if needed
+    return True
+
+
 @api_view(["POST"])
 def ContactFormSubmission(request):
     if request.method == "POST":
