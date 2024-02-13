@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView, DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons
+from .views import DeveloperListCreateView, ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -44,6 +44,7 @@ urlpatterns = [
     path('news/<int:pk>/', NewsRetrieveUpdateDeleteView.as_view(),
          name='news-retrieve-update-delete'),
     path('city/', CityListCreateView.as_view(), name='city-list-create'),
+    path('contact-form-submission/', ContactFormSubmission, name='contact-form-submission'),
     path('all-city/', get_all_city, name='get-all-city'),
     path('city/<int:pk>/', CityRetrieveUpdateDeleteView.as_view(),
          name='city-retrieve-update-delete'),
