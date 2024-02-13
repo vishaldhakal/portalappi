@@ -201,7 +201,7 @@ JAZZMIN_SETTINGS = {
 
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_HOST = 'email-smtp.us-east-2.amazonaws.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'condomonk9@gmail.com'
-EMAIL_HOST_PASSWORD = 'Hn3j9RzEU2kVbhX6'
+EMAIL_HOST_USER = 'AKIAY3W6BV6EVFHV5C7T'
+EMAIL_HOST_PASSWORD = 'BBAf+SdKaWJjXORxuGH0Wtd6/BWrJHDXN+cwBolyBlUL'

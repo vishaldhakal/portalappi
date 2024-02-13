@@ -349,3 +349,37 @@ def get_all_city(request):
     cities = City.objects.all()
     serializer = CitySerializerSmall(cities, many=True)
     return Response(serializer.data)
+
+@api_view(["POST"])
+def ContactFormSubmission(request):
+    if request.method == "POST":
+        subject = "Inquiry about " + \
+            request.POST["proj_name"]+" in " + \
+            request.POST["cityy"]+" - Condomonk"
+        emaill = "Condomonk <inquiry@condomonk.ca>"
+        headers = {'Reply-To': request.POST["email"]}
+
+        name = request.POST["name"]
+        email = request.POST["email"]
+        phone = request.POST["phone"]
+        message = request.POST["message"]
+        realtor = request.POST["realtor"]
+
+        if validate_name(request.POST["name"]) and validate_email(request.POST["email"]) and validate_phone(request.POST["phone"]):
+            body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}\nIs a realtor?: {realtor}"
+            email = EmailMessage(
+                subject, body, emaill, ["milan@homebaba.ca"],
+                reply_to=[email], headers=headers
+            )
+            email.send(fail_silently=False)
+            return HttpResponse("Sucess")
+        else:
+            email = EmailMessage(
+                subject, body, emaill, ["milan@homebaba.ca"],
+                reply_to=[email], headers=headers
+            )
+            email.send(fail_silently=False)
+            return HttpResponse("Sucess")
+    else:
+        return HttpResponse("Not post req")
+    
