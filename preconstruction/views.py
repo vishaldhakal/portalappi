@@ -402,7 +402,7 @@ def ContactFormSubmission(request):
         subject = "Inquiry about " + \
             request.POST["proj_name"]+" in " + \
             request.POST["cityy"]+" - Condomonk"
-        emaill = "Condomonk <inquiry@condomonk.ca>"
+        emaill = "Condomonk <info@homebaba.ca>"
         headers = {'Reply-To': request.POST["email"]}
 
         name = request.POST["name"]
