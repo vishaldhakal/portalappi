@@ -19,6 +19,32 @@ import datetime
 from rest_framework import generics
 from .serializers import *
 from django.utils.text import slugify
+import asyncio
+from sydney import SydneyClient
+
+sydney = SydneyClient()
+
+async def clientt(prompt) -> str:
+    async with SydneyClient() as sydney:
+        print(prompt)
+        if prompt == "!reset":
+            await sydney.reset_conversation()
+            return "Conversation reset"
+        elif prompt == "!exit":
+            return "Goodbye"
+        else:
+            newp = prompt+ " answer it under 250 letters"
+            responses = []
+            async for response in sydney.ask_stream(newp):
+                responses.append(response)
+            
+            return ''.join(responses)
+
+@api_view(['POST'])
+def robotView(request):
+    data = request.data
+    prompt = data.get("prompt")
+    return JsonResponse({"message": asyncio.run(clientt(prompt))})
 
 
 class DeveloperListCreateView(generics.ListCreateAPIView):

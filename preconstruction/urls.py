@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView, ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons
+from .views import DeveloperListCreateView,robotView, ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,6 +39,7 @@ urlpatterns = [
     path('events/<int:pk>/', EventRetrieveUpdateDeleteView.as_view(),
          name='event-retrieve-update-delete'),
     path('news/', NewsListCreateView.as_view(), name='news-list-create'),
+    path('robot/', robotView, name='robot-view'),
     path('remove-last-part-of-slug/', remove_last_part_of_slug,
          name='remove-last-part-of-slug'),
     path('news/<int:pk>/', NewsRetrieveUpdateDeleteView.as_view(),
