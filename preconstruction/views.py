@@ -19,7 +19,7 @@ import datetime
 from rest_framework import generics
 from .serializers import *
 from django.utils.text import slugify
-import asyncio
+""" import asyncio
 from sydney import SydneyClient
 
 sydney = SydneyClient()
@@ -45,7 +45,7 @@ def robotView(request):
     data = request.data
     prompt = data.get("prompt")
     return Response({"message": asyncio.run(clientt(prompt))})
-
+ """
 
 class DeveloperListCreateView(generics.ListCreateAPIView):
     queryset = Developer.objects.all()
