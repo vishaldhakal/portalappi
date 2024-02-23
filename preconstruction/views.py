@@ -44,7 +44,7 @@ async def clientt(prompt) -> str:
 def robotView(request):
     data = request.data
     prompt = data.get("prompt")
-    return JsonResponse({"message": asyncio.run(clientt(prompt))})
+    return Response({"message": asyncio.run(clientt(prompt))})
 
 
 class DeveloperListCreateView(generics.ListCreateAPIView):
