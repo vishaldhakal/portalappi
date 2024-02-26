@@ -428,7 +428,7 @@ def ContactFormSubmission(request):
         subject = "Inquiry about " + \
             request.POST["proj_name"]+" in " + \
             request.POST["cityy"]+" - Condomonk"
-        emaill = "Condomonk <info@homebaba.ca>"
+        emaill = "Condomonk <info@condomonk.ca>"
         headers = {'Reply-To': request.POST["email"]}
 
         name = request.POST["name"]
