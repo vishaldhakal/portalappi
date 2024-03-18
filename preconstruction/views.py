@@ -376,6 +376,12 @@ def get_all_city(request):
     serializer = CitySerializerSmall(cities, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_all_precons(request):
+    cities = City.objects.all()
+    serializer = CitySerializerSmallSearch(cities, many=True)
+    return Response(serializer.data)
+
 def validate_name(name):
     """
     Validates the name field.

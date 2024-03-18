@@ -74,6 +74,8 @@ class PreConstruction(models.Model):
 
     def __str__(self):
         return self.project_name + " [ " + self.city.name+" ] "
+    
+    
 
     class Meta:
         ordering = ('-last_updated',)

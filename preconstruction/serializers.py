@@ -82,3 +82,22 @@ class FavouriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favourite
         fields = '__all__'
+
+class PreConstructionSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PreConstruction
+        fields = ['id','slug','project_name']
+        ordering = ['last_updated']
+
+
+class CitySerializerSmallSearch(serializers.ModelSerializer):
+    preconstructions = serializers.SerializerMethodField()
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'slug','preconstructions']
+
+    def get_preconstructions(self, obj):
+        preconstructions = PreConstruction.objects.filter(city=obj)
+        serializer = PreConstructionSearchSerializer(preconstructions, many=True)
+        return serializer.data
+
