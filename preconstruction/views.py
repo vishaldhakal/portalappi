@@ -235,14 +235,36 @@ def PreConstructionDetailView(request, slug):
     serializer = PreConstructionSerializer(preconstruction)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 def PreConstructionsCityView(request, slug):
+    status = request.GET.get('status')
+    page_size = request.GET.get('page_size',60)
+    occupancy = request.GET.get('occupancy')
+    project_type = request.GET.get('project_type')
+    price_starting_from = request.GET.get('price_starting_from')
     city = City.objects.get(slug=slug)
     cityser = CitySerializer(city)
+
     preconstructions = PreConstruction.objects.filter(city__slug=slug)
+    #add pagination
+    paginator = PageNumberPagination()
+    paginator.page_size = page_size
+
+    if status:
+        preconstructions = preconstructions.filter(status=status)
+    if occupancy:
+        preconstructions = preconstructions.filter(occupancy=occupancy)
+    if project_type:
+        preconstructions = preconstructions.filter(project_type=project_type)
+    if price_starting_from:
+        preconstructions = preconstructions.filter(
+            price_starting_from__gte=price_starting_from)
+
+    preconstructions = paginator.paginate_queryset(preconstructions, request)
+        
     serializer = PreConstructionSerializerSmall(preconstructions, many=True)
     return Response({"city": cityser.data, "preconstructions": serializer.data})
+
 
 
 class EventListCreateView(generics.ListCreateAPIView):
