@@ -52,6 +52,7 @@ class PreConstructionSerializer(serializers.ModelSerializer):
 class PreConstructionSerializerSmall(serializers.ModelSerializer):
     image = PreConstructionImageSerializer(many=True, read_only=True)
     city = CitySerializerSmall()
+    developer = DeveloperSerializer()
 
     class Meta:
         model = PreConstruction
