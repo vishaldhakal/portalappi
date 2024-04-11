@@ -144,3 +144,31 @@ class FavouriteEvent(models.Model):
         Agent, on_delete=models.CASCADE, related_name="event_agent")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="event")
+
+class Partner(models.Model):
+    TYPE_CHOICES = [
+        ("Brokerage", "Brokerage"),
+        ("Real Estate Agent", "Real Estate Agent"),
+        ("Real Estate Salesperson", "Real Estate Salesperson"),
+    ]
+
+    name = models.CharField(max_length=500)
+    image = models.FileField(blank=True)
+    partner_type = models.CharField(max_length=500,
+                                    choices=TYPE_CHOICES, default="Real Estate Agent")
+    brokerage_name = models.CharField(max_length=500)
+    email = models.EmailField(max_length=500, unique=True)
+    cities = models.ManyToManyField(City, blank=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class LeadsCount(models.Model):
+    lead_count = models.IntegerField(default=0)
+    partner = models.ForeignKey(Partner, on_delete=models.DO_NOTHING)
+    date = models.DateField(
+        auto_now=False, auto_created=False, auto_now_add=False)
+
+    def __str__(self):
+        return str(self.lead_count)

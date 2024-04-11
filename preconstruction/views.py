@@ -7,7 +7,7 @@ from django.shortcuts import render, HttpResponse
 from rest_framework.decorators import api_view
 from django.conf import settings
 from rest_framework.response import Response
-from .models import Developer, PreConstruction, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite
+from .models import Developer, PreConstruction, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite,Partner,LeadsCount
 from rest_framework.pagination import PageNumberPagination
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -233,7 +233,10 @@ def remove_last_part_of_slug(request):
 def PreConstructionDetailView(request, slug):
     preconstruction = PreConstruction.objects.get(slug=slug)
     serializer = PreConstructionSerializer(preconstruction)
-    return Response(serializer.data)
+    cityyy = preconstruction.city
+    partt = Partner.objects.filter(cities=cityyy)
+    serializer2 = PartnerSerializer(partt, many=True)
+    return Response({"preconstruction": serializer.data, "partners": serializer2.data})
 
 @api_view(['GET'])
 def PreConstructionsCityView(request, slug):
@@ -244,6 +247,9 @@ def PreConstructionsCityView(request, slug):
     price_starting_from = request.GET.get('price_starting_from')
     city = City.objects.get(slug=slug)
     cityser = CitySerializer(city)
+
+    partt = Partner.objects.filter(cities=city)
+    serializer2 = PartnerSerializer(partt, many=True)
 
     preconstructions = PreConstruction.objects.filter(city__slug=slug)
     #add pagination
@@ -263,7 +269,7 @@ def PreConstructionsCityView(request, slug):
     preconstructions = paginator.paginate_queryset(preconstructions, request)
         
     serializer = PreConstructionSerializerSmall(preconstructions, many=True)
-    return Response({"city": cityser.data, "preconstructions": serializer.data})
+    return Response({"city": cityser.data, "preconstructions": serializer.data,"partner":serializer2.data})
 
 
 
@@ -467,12 +473,55 @@ def ContactFormSubmission(request):
 
         if validate_name(request.POST["name"]) and validate_email(request.POST["email"]) and validate_phone(request.POST["phone"]):
             body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}\nIs a realtor?: {realtor}"
-            email = EmailMessage(
-                subject, body, emaill, ["milan@homebaba.ca"],
-                reply_to=[email], headers=headers
-            )
-            email.send(fail_silently=False)
-            return HttpResponse("Sucess")
+            
+            city = request.POST["cityy"]
+
+            if City.objects.filter(name=city).exists():
+                sss = city.replace("-", " ")
+                slug_city = sss.title()
+                cit = City.objects.get(name=slug_city)
+
+                partnerss = Partner.objects.filter(cities=cit)
+                if partnerss:
+                    part = partnerss[0]
+                    today_date = datetime.date.today()
+                    sales_all = LeadsCount.objects.all()
+                    check = 0
+
+                    for sale in sales_all:
+                        if sale.date == today_date and sale.partner == part:
+                            check = 1
+
+                    if check == 0:
+                        saless = LeadsCount.objects.create(
+                            lead_count=0, date=today_date, partner=part)
+                        saless.save()
+
+                    sale_today = LeadsCount.objects.get(
+                        date=today_date, partner=part)
+                    get_sale_count = sale_today.lead_count
+                    sale_today.lead_count = get_sale_count+1
+                    sale_today.save()
+                    email = EmailMessage(
+                        subject, body, emaill, [
+                            "milan@homebaba.ca", part.email],
+                        reply_to=[email]
+                    )
+                    email.send(fail_silently=False)
+                else:
+                    email = EmailMessage(
+                        subject, body, emaill, to=["milan@homebaba.ca"],
+                        reply_to=[email]
+                    )
+                    email.send(fail_silently=False)
+                return HttpResponse("Sucess")
+            else:
+                email = EmailMessage(
+                    subject, body, emaill, ["milan@homebaba.ca"],
+                    reply_to=[email], headers=headers
+                )
+                email.send(fail_silently=False)
+                return HttpResponse("Sucess")
         else:
             email = EmailMessage(
                 subject, body, emaill, ["milan@homebaba.ca"],

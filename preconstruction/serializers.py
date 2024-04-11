@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite
+from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite,Partner
 from accounts.serializers import AgentSerializer
 
 
@@ -9,6 +9,11 @@ class DeveloperSerializer(serializers.ModelSerializer):
         fields = '__all__'
         ordering = ['name']
 
+class PartnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('name', 'image', 'partner_type', 'brokerage_name', 'email')
+        model = Partner
+        depth = 1
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
