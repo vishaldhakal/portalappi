@@ -233,10 +233,10 @@ def remove_last_part_of_slug(request):
 def PreConstructionDetailView(request, slug):
     preconstruction = PreConstruction.objects.get(slug=slug)
     serializer = PreConstructionSerializer(preconstruction)
-    cityyy = preconstruction.city
-    partt = Partner.objects.filter(cities=cityyy)
-    serializer2 = PartnerSerializer(partt, many=True)
-    return Response({"preconstruction": serializer.data, "partners": serializer2.data})
+    """ cityyy = preconstruction.city """
+    """ partt = Partner.objects.filter(cities=cityyy)
+    serializer2 = PartnerSerializer(partt, many=True) """
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def PreConstructionsCityView(request, slug):
