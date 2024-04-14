@@ -55,6 +55,13 @@ class DomainsListCreateView(generics.ListCreateAPIView):
     queryset = Domains.objects.all()
     serializer_class = DomainsSerializer
 
+#create a function which receives domain as input from url as get request and returns the domain details
+@api_view(['GET'])
+def get_domain(request):
+    domainn = request.GET["domain"]
+    domain = Domains.objects.get(domain=domainn)
+    serializer = DomainsSerializer(domain)
+    return Response(serializer.data)
 
 class DeveloperRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Developer.objects.all()
