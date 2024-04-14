@@ -51,6 +51,10 @@ class DeveloperListCreateView(generics.ListCreateAPIView):
     queryset = Developer.objects.all()
     serializer_class = DeveloperSerializer
 
+class DomainsListCreateView(generics.ListCreateAPIView):
+    queryset = Domains.objects.all()
+    serializer_class = DomainsSerializer
+
 
 class DeveloperRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Developer.objects.all()

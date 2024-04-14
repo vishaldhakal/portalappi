@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite,Partner
+from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite,Partner,Domains
 from accounts.serializers import AgentSerializer
 
 
@@ -107,3 +107,8 @@ class CitySerializerSmallSearch(serializers.ModelSerializer):
         serializer = PreConstructionSearchSerializer(preconstructions, many=True)
         return serializer.data
 
+class DomainsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Domains
+        fields = '__all__'
+        ordering = ['id']
