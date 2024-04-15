@@ -175,7 +175,7 @@ class LeadsCount(models.Model):
 
 class Domains(models.Model):
     domain = models.CharField(max_length=500)
-    contact_email = models.CharField(max_length=500, unique=True)
+    contact_email = models.CharField(max_length=500)
 
     def __str__(self):
         return str(self.domain)
