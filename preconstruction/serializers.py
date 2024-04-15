@@ -9,12 +9,6 @@ class DeveloperSerializer(serializers.ModelSerializer):
         fields = '__all__'
         ordering = ['name']
 
-class PartnerSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = Partner
-        depth = 1
-
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
@@ -27,6 +21,12 @@ class CitySerializerSmall(serializers.ModelSerializer):
         model = City
         fields = ['id', 'name', 'slug']
 
+class PartnerSerializer(serializers.ModelSerializer):
+    cities = CitySerializerSmall(many=True)
+    class Meta:
+        fields = '__all__'
+        model = Partner
+        depth = 1
 
 class PreConstructionImageSerializer(serializers.ModelSerializer):
     class Meta:

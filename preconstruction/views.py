@@ -315,6 +315,24 @@ class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.name = request.POST['name']
+        instance.email = request.POST['email']
+        instance.brokerage_name = request.POST['brokerage_name']
+        instance.image = request.FILES['image']
+        instance.save()
+        cities = request.POST.getlist('cities')
+
+        instance.cities.clear()
+
+        for city in cities:
+            city = City.objects.get(slug=city["slug"])
+            instance.cities.add(city)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
 class NewsListCreateView(generics.ListCreateAPIView):
     queryset = News.objects.all()
