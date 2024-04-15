@@ -11,7 +11,7 @@ class DeveloperSerializer(serializers.ModelSerializer):
 
 class PartnerSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('name', 'image', 'partner_type', 'brokerage_name', 'email')
+        fields = '__all__'
         model = Partner
         depth = 1
 

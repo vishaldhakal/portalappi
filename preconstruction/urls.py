@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView
+from .views import DeveloperListCreateView, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView,PartnerListCreateView,PartnerRetrieveUpdateDeleteView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -35,10 +35,13 @@ urlpatterns = [
     path('related-precons/<str:city>/',
          get_related_precons, name='related-precons'),
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
-    path('delete-image/<int:pk>/', delete_image, name='delete_image'),
-    path('delete-floorplan/<int:pk>/', delete_floorplan, name='delete_floorplan'),
     path('events/<int:pk>/', EventRetrieveUpdateDeleteView.as_view(),
          name='event-retrieve-update-delete'),
+    path('partners/', PartnerListCreateView.as_view(), name='partners-list-create'),
+    path('partners/<int:pk>/', PartnerRetrieveUpdateDeleteView.as_view(),
+         name='partners-retrieve-update-delete'),
+    path('delete-image/<int:pk>/', delete_image, name='delete_image'),
+    path('delete-floorplan/<int:pk>/', delete_floorplan, name='delete_floorplan'),
     path('news/', NewsListCreateView.as_view(), name='news-list-create'),
     path('remove-last-part-of-slug/', remove_last_part_of_slug,
          name='remove-last-part-of-slug'),

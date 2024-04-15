@@ -306,6 +306,15 @@ class EventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+class PartnerListCreateView(generics.ListCreateAPIView):
+    queryset = Partner.objects.all()
+    serializer_class = PartnerSerializer
+
+
+class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Partner.objects.all()
+    serializer_class = PartnerSerializer
+
 
 class NewsListCreateView(generics.ListCreateAPIView):
     queryset = News.objects.all()
