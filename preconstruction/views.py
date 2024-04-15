@@ -482,6 +482,16 @@ def get_all_city(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def get_all_precons_search(request):
+    precons = PreConstruction.objects.all()
+    serializer = PreConstructionSearchSerializer(precons, many=True)
+
+    cities = City.objects.all()
+    serializer2 = CitySerializerSmall(cities,many=True)
+
+    return Response({"projects": serializer.data, "cities": serializer2.data})
+
+@api_view(['GET'])
 def get_all_precons(request):
     cities = City.objects.all()
     serializer = CitySerializerSmallSearch(cities, many=True)
