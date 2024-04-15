@@ -92,19 +92,8 @@ class DeveloperRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-
-class CityListCreateView(generics.ListCreateAPIView):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-
-
-class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-
-
 class LargeResultsSetPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 10000
 
@@ -310,6 +299,33 @@ class PartnerListCreateView(generics.ListCreateAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        image = request.FILES['image']
+        name = data.get('name')
+        email = data.get('email')
+        brokerage_name = data.get('brokerage_name')
+        
+        cities_data = []
+        for key, value in data.items():
+            if key.startswith('cities['):
+                city_index = int(key.split('[')[1].split(']')[0])
+                city_field = key.split(']')[1][1:]
+                if city_index >= len(cities_data):
+                    cities_data.append({})
+                cities_data[city_index][city_field] = value
+
+        partner = Partner.objects.create(
+            name=name, email=email, brokerage_name=brokerage_name, image=image)
+        
+        for city_data in cities_data:
+            city = City.objects.get(name=city_data['name'])
+            partner.cities.add(city)
+
+        partner.save()
+        serializer = PartnerSerializer(partner)
+        return Response(serializer.data)
+
 
 class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Partner.objects.all()
@@ -317,19 +333,28 @@ class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.name = request.POST['name']
-        instance.email = request.POST['email']
-        instance.brokerage_name = request.POST['brokerage_name']
-        instance.image = request.FILES['image']
-        instance.save()
-        cities = request.POST.getlist('cities')
+        if request.data.get('image'):
+            instance.image = request.data.get('image')
+
+        instance.name = request.data.get('name')
+        instance.email = request.data.get('email')
+        instance.brokerage_name = request.data.get('brokerage_name')
+
+        cities_data = []
+        for key, value in request.data.items():
+            if key.startswith('cities['):
+                city_index = int(key.split('[')[1].split(']')[0])
+                city_field = key.split(']')[1][1:]
+                if city_index >= len(cities_data):
+                    cities_data.append({})
+                cities_data[city_index][city_field] = value
 
         instance.cities.clear()
-
-        for city in cities:
-            city = City.objects.get(slug=city["slug"])
+        for city_data in cities_data:
+            city = City.objects.get(name=city_data['name'])
             instance.cities.add(city)
 
+        instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
@@ -389,6 +414,7 @@ class NewsRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 class CityListCreateView(generics.ListCreateAPIView):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    pagination_class = LargeResultsSetPagination
 
     """ custom function to create city with only name """
 
