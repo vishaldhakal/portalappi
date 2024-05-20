@@ -201,7 +201,7 @@ JAZZMIN_SETTINGS = {
 
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.elasticemail.com'
-EMAIL_PORT = 2525
-EMAIL_HOST_USER = 'info@condomonk.ca'
-EMAIL_HOST_PASSWORD = '85DD96F1A279745C4A678028BA7AFAD87C14'
+EMAIL_HOST = 'smtp.resend.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'resend'
+EMAIL_HOST_PASSWORD = 're_FbXgTZxt_QCiG3T1ERE4EeWuqQLZpExEB'
