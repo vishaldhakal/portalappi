@@ -354,7 +354,7 @@ class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
         cities_data = []
         for key, value in request.data.items():
-            if key.startswith('cities['):
+            if key.startswith('selectedCities['):
                 city_index = int(key.split('[')[1].split(']')[0])
                 city_field = key.split(']')[1][1:]
                 if city_index >= len(cities_data):
