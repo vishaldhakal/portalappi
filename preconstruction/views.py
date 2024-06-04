@@ -112,6 +112,7 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         project_name = data.get('predata[project_name]')
 
         project_type = data.get('predata[project_type]')
+        is_featured = data.get('predata[is_featured]')
         status = data.get('predata[status]')
         project_address = data.get('predata[project_address]')
         description = data.get('predata[description]')
@@ -142,6 +143,11 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
             occupancy=occupancy,
             no_of_units=no_of_units
         )
+
+        if is_featured == "true":
+            preconstruction.is_featured = True
+        else:
+            preconstruction.is_featured = False
 
         """ Save images from images received """
         images = request.data.getlist('images[]')
@@ -183,6 +189,12 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
         price_to = data.get('predata[price_to]')
         occupancy = data.get('predata[occupancy]')
         no_of_units = data.get('predata[no_of_units]')
+        is_featured = data.get('predata[is_featured')
+
+        if is_featured == "true":
+            instance.is_featured = True
+        else:
+            instance.is_featured = False
 
         instance.developer = developer
         instance.city = city
@@ -350,6 +362,7 @@ class PartnerRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
                 cities_data[city_index][city_field] = value
 
         instance.cities.clear()
+        instance.save()
         for city_data in cities_data:
             city = City.objects.get(name=city_data['name'])
             instance.cities.add(city)

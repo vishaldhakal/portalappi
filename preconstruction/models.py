@@ -53,7 +53,7 @@ class PreConstruction(models.Model):
         ("Detached", "Detached"),
         ("NaN", "NaN"),
     ]
-
+    is_featured = models.BooleanField(default=False)
     developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
     occupancy = models.CharField(max_length=500)
     no_of_units = models.CharField(max_length=500)
@@ -166,7 +166,7 @@ class Partner(models.Model):
 
 class LeadsCount(models.Model):
     lead_count = models.IntegerField(default=0)
-    partner = models.ForeignKey(Partner, on_delete=models.DO_NOTHING)
+    partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
     date = models.DateField(
         auto_now=False, auto_created=False, auto_now_add=False)
 
