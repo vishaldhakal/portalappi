@@ -103,6 +103,20 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
     serializer_class = PreConstructionSerializer
     pagination_class = LargeResultsSetPagination
 
+    def list(self, request, *args, **kwargs):
+        is_featured = request.GET.get('is_featured',False)
+        if is_featured:
+            preconstructions = PreConstruction.objects.filter(is_featured=True)
+        else:
+            preconstructions = PreConstruction.objects.all()
+
+        paginator = PageNumberPagination()
+        paginator.page_size = 60
+        result_page = paginator.paginate_queryset(preconstructions, request)
+        serializer = PreConstructionSerializerSmall(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    
+
     def create(self, request, *args, **kwargs):
         data = request.data
         developer_id = data.get('predata[developer][id]')
