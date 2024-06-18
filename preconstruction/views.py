@@ -126,8 +126,6 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
             serializer = PreConstructionSerializerSmallVsmall(result_page, many=True)
         else:
             serializer = PreConstructionSerializerSmall(result_page, many=True)
-
-        serializer = PreConstructionSerializerSmall(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
     
 
