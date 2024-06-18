@@ -105,10 +105,14 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         is_featured = request.GET.get('is_featured',False)
+        city = request.GET.get('city','All')
         if is_featured:
             preconstructions = PreConstruction.objects.filter(is_featured=True)
         else:
             preconstructions = PreConstruction.objects.all()
+        
+        if city != 'All':
+            preconstructions = preconstructions.filter(city__slug=city)
 
         paginator = PageNumberPagination()
         paginator.page_size = 60
