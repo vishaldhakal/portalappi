@@ -71,7 +71,7 @@ class PreConstructionSerializerSmall(serializers.ModelSerializer):
 
     class Meta:
         model = PreConstruction
-        fields = ['id', 'slug', 'project_name', 'city', 'developer', 'image','price_starting_from','price_to','is_featured','status','project_type','description','project_address','occupancy','last_updated']
+        fields = ['id', 'slug', 'project_name', 'city', 'developer', 'image','price_starting_from','price_to','is_featured','status','project_type','project_address','occupancy','last_updated']
         ordering = ['last_updated']
     
     def get_image(self, obj):
