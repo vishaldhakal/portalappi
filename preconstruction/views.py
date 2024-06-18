@@ -121,11 +121,12 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         paginator = PageNumberPagination()
         paginator.page_size = 60
         result_page = paginator.paginate_queryset(preconstructions, request)
-        if smallerv == "All":
-            serializer = PreConstructionSerializerSmall(result_page, many=True)
-        else:
+        
+        if smallerv != "All":
             serializer = PreConstructionSerializerSmallVsmall(result_page, many=True)
-            
+        else:
+            serializer = PreConstructionSerializerSmall(result_page, many=True)
+
         serializer = PreConstructionSerializerSmall(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
     
