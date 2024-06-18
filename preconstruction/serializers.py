@@ -59,15 +59,25 @@ class PreConstructionSerializer(serializers.ModelSerializer):
         ordering = ['last_updated']
 
 
+class DeveloperSerializerSmall(serializers.ModelSerializer):
+    class Meta:
+        model = Developer
+        fields = ['name']
+
 class PreConstructionSerializerSmall(serializers.ModelSerializer):
-    image = PreConstructionImageSerializer(many=True, read_only=True)
+    image = serializers.SerializerMethodField()
     city = CitySerializerSmall()
-    developer = DeveloperSerializer()
+    developer = DeveloperSerializerSmall()
 
     class Meta:
         model = PreConstruction
-        fields = '__all__'
+        fields = ['id', 'slug', 'project_name', 'city', 'developer', 'image','price_starting_from','price_to','is_featured','status','project_type','description','project_address','occupancy','last_updated']
         ordering = ['last_updated']
+    
+    def get_image(self, obj):
+        image = PreConstructionImage.objects.filter(preconstruction=obj).first()
+        serializer = PreConstructionImageSerializer(image)
+        return serializer.data
 
 
 class EventSerializer(serializers.ModelSerializer):
