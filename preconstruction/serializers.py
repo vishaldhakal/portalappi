@@ -64,6 +64,13 @@ class DeveloperSerializerSmall(serializers.ModelSerializer):
         model = Developer
         fields = ['name']
 
+class PreConstructionSerializerSmallVsmall(serializers.ModelSerializer):
+
+    class Meta:
+        model = PreConstruction
+        fields = ['id', 'slug', 'project_name', 'city', 'status','project_type','project_address','occupancy','last_updated']
+        ordering = ['last_updated']
+        
 class PreConstructionSerializerSmall(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     city = CitySerializerSmall()

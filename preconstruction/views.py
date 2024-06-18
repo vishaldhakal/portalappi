@@ -106,6 +106,8 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         is_featured = request.GET.get('is_featured',False)
         city = request.GET.get('city','All')
+        smallerv = request.GET.get('small','All')
+
         if is_featured:
             preconstructions = PreConstruction.objects.filter(is_featured=True)
         else:
@@ -113,10 +115,17 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         
         if city != 'All':
             preconstructions = preconstructions.filter(city__slug=city)
+        
+
 
         paginator = PageNumberPagination()
         paginator.page_size = 60
         result_page = paginator.paginate_queryset(preconstructions, request)
+        if smallerv == "All":
+            serializer = PreConstructionSerializerSmall(result_page, many=True)
+        else:
+            serializer = PreConstructionSerializerSmallVsmall(result_page, many=True)
+            
         serializer = PreConstructionSerializerSmall(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
     
