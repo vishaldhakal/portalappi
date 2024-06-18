@@ -449,6 +449,19 @@ class CityListCreateView(generics.ListCreateAPIView):
 
     """ custom function to create city with only name """
 
+    def list(self, request, *args, **kwargs):
+        show_desc = request.GET.get('show_desc', "Yes")
+        cities = City.objects.all()
+        paginator = PageNumberPagination()
+        paginator.page_size = 60
+        result_page = paginator.paginate_queryset(cities, request)
+        if show_desc == "Yes":
+            serializer = CitySerializer(result_page, many=True)
+        else:
+            serializer = CitySerializerSmall(result_page, many = True)
+
+        return paginator.get_paginated_response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         data = request.data
         city_name = data.get('name')
