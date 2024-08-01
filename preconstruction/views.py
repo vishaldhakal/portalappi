@@ -415,15 +415,26 @@ class NewsListCreateView(generics.ListCreateAPIView):
         news_thumbnail = data.get('news_thumbnail')
         news_description = data.get('news_description')
         news_link = data.get('news_link')
+        slug = slugify(news_title)
 
         news = News.objects.create(
             city=city,
             news_title=news_title,
             news_thumbnail=news_thumbnail,
             news_description=news_description,
-            news_link=news_link
+            news_link=news_link,
+            slug=slug
         )
         serializer = NewsSerializer(news)
+        return Response(serializer.data)
+    
+    def list(self, request, *args, **kwargs):
+        city = request.GET.get('city')
+        if city:
+            news = News.objects.filter(city__slug=city)
+        else:
+            news = News.objects.all()
+        serializer = NewsSerializer(news, many=True)
         return Response(serializer.data)
 
 
@@ -445,10 +456,20 @@ class NewsRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         instance.news_description = request.data.get('news_description')
         instance.news_link = request.data.get('news_link')
         instance.city = city
+        if instance.slug != slugify(request.data.get('news_title')):
+            if Developer.objects.filter(slug=slugify(request.data.get('news_title'))).exists():
+                instance.slug = slugify(request.data.get('news_title')) + "-" + str(instance.id)
+            else:
+                instance.slug = slugify(request.data.get('news_title'))
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def news_detail(request, slug):
+    news = News.objects.get(slug=slug)
+    serializer = NewsSerializer(news)
+    return Response(serializer.data)
 
 class CityListCreateView(generics.ListCreateAPIView):
     queryset = City.objects.all()
