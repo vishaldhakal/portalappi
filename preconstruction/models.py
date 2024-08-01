@@ -115,6 +115,7 @@ class Event(models.Model):
 class News(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     news_title = models.CharField(max_length=1000)
+    slug = models.CharField(max_length=1000, blank=True)
     news_thumbnail = models.FileField(blank=True)
     news_description = SummernoteTextField(blank=True)
     date_of_upload = models.DateField(auto_now_add=True)

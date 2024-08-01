@@ -671,3 +671,11 @@ def ContactFormSubmission(request):
     else:
         return HttpResponse("Not post req")
     
+
+@api_view(['GET'])
+def slugify_all_news(request):
+    developers = News.objects.all()
+    for news in developers:
+        news.slug = slugify(news.news_title)
+        news.save()
+    return Response({"message": "done"})

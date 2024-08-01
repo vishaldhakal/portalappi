@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView,get_all_precons_search, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView,PartnerListCreateView,PartnerRetrieveUpdateDeleteView
+from .views import DeveloperListCreateView,slugify_all_news,get_all_precons_search, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView,PartnerListCreateView,PartnerRetrieveUpdateDeleteView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -36,6 +36,7 @@ urlpatterns = [
     path('related-precons/<str:city>/',
          get_related_precons, name='related-precons'),
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
+    path('slugify-news/', slugify_all_news,name='slugify_all_news'),
     path('events/<int:pk>/', EventRetrieveUpdateDeleteView.as_view(),
          name='event-retrieve-update-delete'),
     path('partners/', PartnerListCreateView.as_view(), name='partners-list-create'),
