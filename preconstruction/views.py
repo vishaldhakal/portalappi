@@ -106,6 +106,7 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         is_featured = request.GET.get('is_featured',False)
         city = request.GET.get('city','All')
+        page_size = request.GET.get('page_size',60)
         smallerv = request.GET.get('small','All')
 
         if is_featured:
@@ -119,7 +120,7 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
 
 
         paginator = PageNumberPagination()
-        paginator.page_size = 60
+        paginator.page_size = page_size
         result_page = paginator.paginate_queryset(preconstructions, request)
         
         if smallerv != "All":
