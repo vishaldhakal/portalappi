@@ -13,6 +13,7 @@ class PreConstructionFloorPlanAdmin(admin.StackedInline):
 @admin.register(PreConstruction)
 class PreConstructionAdmin(admin.ModelAdmin):
     list_display = ("project_name", "city", "project_type")
+    search_fields = ("project_name__contains")
 
     class Meta:
         model = PreConstruction
