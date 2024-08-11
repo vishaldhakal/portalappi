@@ -484,9 +484,10 @@ class CityListCreateView(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         show_desc = request.GET.get('show_desc', "Yes")
+        page_size = request.GET.get('page_size', 10)
         cities = City.objects.all()
         paginator = PageNumberPagination()
-        paginator.page_size = 60
+        paginator.page_size = page_size
         result_page = paginator.paginate_queryset(cities, request)
         if show_desc == "Yes":
             serializer = CitySerializer(result_page, many=True)
