@@ -47,9 +47,16 @@ def robotView(request):
     return Response({"message": asyncio.run(clientt(prompt))})
  """
 
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
 class DeveloperListCreateView(generics.ListCreateAPIView):
     queryset = Developer.objects.all()
     serializer_class = DeveloperSerializer
+    pagination_class = LargeResultsSetPagination
+
 
 class DomainsListCreateView(generics.ListCreateAPIView):
     queryset = Domains.objects.all()
@@ -92,10 +99,6 @@ class DeveloperRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-class LargeResultsSetPagination(PageNumberPagination):
-    page_size = 100
-    page_size_query_param = 'page_size'
-    max_page_size = 10000
 
 
 class PreConstructionListCreateView(generics.ListCreateAPIView):
