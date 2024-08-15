@@ -310,7 +310,7 @@ def PreConstructionsCityView(request, slug):
     if is_featured:
         preconstructions = PreConstruction.objects.filter(city__slug=slug,is_featured=True).order_by('-is_featured','-last_updated')
     else:
-        preconstructions = PreConstruction.objects.filter(city__slug=slug).order_by('-is_featured','-last_updated')
+        preconstructions = PreConstruction.objects.filter(city__slug=slug,is_featured=False).order_by('-is_featured','-last_updated')
         
     #add pagination
     paginator = PageNumberPagination()
