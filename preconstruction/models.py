@@ -17,7 +17,7 @@ class Developer(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class City(models.Model):
@@ -29,22 +29,21 @@ class City(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
 
 class PreConstruction(models.Model):
-
     STATUS_CHOICES = [
         ("Upcoming", "Upcoming"),
         ("Selling", "Selling"),
         ("Planning Phase", "Planning Phase"),
-        ("Sold out", "Sold out")
+        ("Sold out", "Sold out"),
     ]
 
     ASSIGNMENT_CHOICES = [
         ("Free", "Free"),
         ("Not Available", "Not Available"),
-        ("Available With Fee", "Available With Fee")
+        ("Available With Fee", "Available With Fee"),
     ]
     PROJECT_CHOICES = [
         ("Condo", "Condo"),
@@ -63,27 +62,28 @@ class PreConstruction(models.Model):
     price_starting_from = models.FloatField(default=0)
     price_to = models.FloatField(default=0)
     project_type = models.CharField(
-        max_length=500, choices=PROJECT_CHOICES, default="NaN")
+        max_length=500, choices=PROJECT_CHOICES, default="NaN"
+    )
     description = SummernoteTextField(blank=True)
     project_address = models.CharField(max_length=500)
     status = models.CharField(
-        max_length=500, choices=STATUS_CHOICES, default="Upcoming")
+        max_length=500, choices=STATUS_CHOICES, default="Upcoming"
+    )
     co_op_available = models.BooleanField(default=False)
     date_of_upload = models.DateField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.project_name + " [ " + self.city.name+" ] "
-    
-    
+        return self.project_name + " [ " + self.city.name + " ] "
 
     class Meta:
-        ordering = ('-last_updated',)
+        ordering = ("-last_updated",)
 
 
 class PreConstructionImage(models.Model):
     preconstruction = models.ForeignKey(
-        PreConstruction, on_delete=models.CASCADE, related_name='image')
+        PreConstruction, on_delete=models.CASCADE, related_name="image"
+    )
     image = models.FileField()
 
     def __str__(self):
@@ -95,7 +95,8 @@ class PreConstructionImage(models.Model):
 
 class PreConstructionFloorPlan(models.Model):
     preconstruction = models.ForeignKey(
-        PreConstruction, on_delete=models.CASCADE, related_name='floorplan')
+        PreConstruction, on_delete=models.CASCADE, related_name="floorplan"
+    )
     floorplan = models.FileField()
 
     def __str__(self):
@@ -127,24 +128,25 @@ class News(models.Model):
 
 
 class Favourite(models.Model):
-    agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name="agent")
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name="agent")
     preconstruction = models.ForeignKey(
-        PreConstruction, on_delete=models.CASCADE, related_name="preconstruction")
+        PreConstruction, on_delete=models.CASCADE, related_name="preconstruction"
+    )
 
 
 class FavouriteNews(models.Model):
     agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name="news_agent")
-    news = models.ForeignKey(
-        News, on_delete=models.CASCADE, related_name="news")
+        Agent, on_delete=models.CASCADE, related_name="news_agent"
+    )
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name="news")
 
 
 class FavouriteEvent(models.Model):
     agent = models.ForeignKey(
-        Agent, on_delete=models.CASCADE, related_name="event_agent")
-    event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, related_name="event")
+        Agent, on_delete=models.CASCADE, related_name="event_agent"
+    )
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event")
+
 
 class Partner(models.Model):
     TYPE_CHOICES = [
@@ -155,8 +157,9 @@ class Partner(models.Model):
 
     name = models.CharField(max_length=500)
     image = models.FileField(blank=True)
-    partner_type = models.CharField(max_length=500,
-                                    choices=TYPE_CHOICES, default="Real Estate Agent")
+    partner_type = models.CharField(
+        max_length=500, choices=TYPE_CHOICES, default="Real Estate Agent"
+    )
     brokerage_name = models.CharField(max_length=500)
     email = models.EmailField(max_length=500, unique=True)
     cities = models.ManyToManyField(City, blank=True)
@@ -168,11 +171,11 @@ class Partner(models.Model):
 class LeadsCount(models.Model):
     lead_count = models.IntegerField(default=0)
     partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
-    date = models.DateField(
-        auto_now=False, auto_created=False, auto_now_add=False)
+    date = models.DateField(auto_now=False, auto_created=False, auto_now_add=False)
 
     def __str__(self):
         return str(self.lead_count)
+
 
 class Domains(models.Model):
     domain = models.CharField(max_length=500)

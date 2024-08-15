@@ -115,7 +115,7 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         if is_featured:
             preconstructions = PreConstruction.objects.filter(is_featured=True)
         else:
-            preconstructions = PreConstruction.objects.all()
+            preconstructions = PreConstruction.objects.filter(is_featured=False)
         
         if city != 'All':
             preconstructions = preconstructions.filter(city__slug=city)
