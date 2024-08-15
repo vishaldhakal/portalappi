@@ -299,6 +299,7 @@ def PreConstructionsCityView(request, slug):
     page_size = request.GET.get('page_size',60)
     occupancy = request.GET.get('occupancy')
     project_type = request.GET.get('project_type')
+    is_featured = request.GET.get('is_featured')
     price_starting_from = request.GET.get('price_starting_from')
     city = City.objects.get(slug=slug)
     cityser = CitySerializer(city)
@@ -306,7 +307,11 @@ def PreConstructionsCityView(request, slug):
     partt = Partner.objects.filter(cities=city)
     serializer2 = PartnerSerializer(partt, many=True)
 
-    preconstructions = PreConstruction.objects.filter(city__slug=slug).order_by('-is_featured','-last_updated')
+    if is_featured:
+        preconstructions = PreConstruction.objects.filter(city__slug=slug,is_featured=True).order_by('-is_featured','-last_updated')
+    else:
+        preconstructions = PreConstruction.objects.filter(city__slug=slug).order_by('-is_featured','-last_updated')
+        
     #add pagination
     paginator = PageNumberPagination()
     paginator.page_size = page_size
