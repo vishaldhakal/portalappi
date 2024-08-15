@@ -306,7 +306,7 @@ def PreConstructionsCityView(request, slug):
     partt = Partner.objects.filter(cities=city)
     serializer2 = PartnerSerializer(partt, many=True)
 
-    preconstructions = PreConstruction.objects.filter(city__slug=slug)
+    preconstructions = PreConstruction.objects.filter(city__slug=slug).order_by('-is_featured','-last_updated')
     #add pagination
     paginator = PageNumberPagination()
     paginator.page_size = page_size
