@@ -68,8 +68,8 @@ class PreConstructionSerializerSmallVsmall(serializers.ModelSerializer):
     city = CitySerializerSmall()
     class Meta:
         model = PreConstruction
-        fields = ['id', 'slug', 'project_name', 'city', 'status','project_type','project_address','occupancy','last_updated']
-        ordering = ['last_updated']
+        fields = ['id', 'slug', 'project_name', 'city', 'status','project_type','project_address','occupancy','last_updated',"is_featured"]
+        ordering = ["is_featured",'last_updated']
 
 class PreConstructionSerializerSmall(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
@@ -79,7 +79,7 @@ class PreConstructionSerializerSmall(serializers.ModelSerializer):
     class Meta:
         model = PreConstruction
         fields = ['id', 'slug', 'project_name', 'city', 'developer', 'image','price_starting_from','price_to','is_featured','status','project_type','project_address','occupancy','last_updated']
-        ordering = ['last_updated']
+        ordering = ["is_featured",'last_updated']
     
     def get_image(self, obj):
         image = PreConstructionImage.objects.filter(preconstruction=obj).first()
