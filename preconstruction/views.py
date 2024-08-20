@@ -7,7 +7,7 @@ from django.shortcuts import render, HttpResponse
 from rest_framework.decorators import api_view
 from django.conf import settings
 from rest_framework.response import Response
-from .models import Developer, PreConstruction, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite,Partner,LeadsCount
+from .models import Developer, PreConstruction, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite,Partner,LeadsCount,TrackingEvent
 from rest_framework.pagination import PageNumberPagination
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -710,3 +710,12 @@ def slugify_all_news(request):
         news.slug = slugify(news.news_title)
         news.save()
     return Response({"message": "done"})
+
+
+class TrackingEventListCreateView(generics.ListCreateAPIView):
+    queryset = TrackingEvent.objects.all()
+    serializer_class = TrackingEventSerializer
+
+class TrackingEventRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TrackingEvent.objects.all()
+    serializer_class = TrackingEventSerializer

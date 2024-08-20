@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import DeveloperListCreateView,slugify_all_news,get_all_precons_search, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView,PartnerListCreateView,PartnerRetrieveUpdateDeleteView,news_detail
+from .views import DeveloperListCreateView,slugify_all_news,get_all_precons_search, get_all_precons,ContactFormSubmission,DeveloperRetrieveUpdateDeleteView, PreConstructionListCreateView, PreConstructionRetrieveUpdateDeleteView, EventListCreateView, EventRetrieveUpdateDeleteView, NewsListCreateView, NewsRetrieveUpdateDeleteView, FavouriteListCreateView, FavouriteRetrieveUpdateDeleteView, CityListCreateView, CityRetrieveUpdateDeleteView, PreConstructionDetailView, PreConstructionsCityView, delete_image, delete_floorplan, remove_last_part_of_slug, get_all_city, get_related_precons,DomainsListCreateView,get_domain,DomainsRetrieveUpdateDeleteView,PartnerListCreateView,PartnerRetrieveUpdateDeleteView,news_detail,TrackingEventListCreateView,TrackingEventRetrieveUpdateDeleteView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -20,6 +20,8 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger',
          cache_timeout=0), name='schema-swagger-ui'),
     path('all-precons/', get_all_precons, name='get-all-precons'),
+    path('track/', TrackingEventListCreateView.as_view(), name='tracking-list-create'),
+    path('track/<int:pk>/', TrackingEventRetrieveUpdateDeleteView.as_view(), name='tracking-retrieve-update'),
     path('all-precons-search/', get_all_precons_search, name='get-all-precons-search'),
     path('developers/', DeveloperListCreateView.as_view(),
          name='developer-list-create'),

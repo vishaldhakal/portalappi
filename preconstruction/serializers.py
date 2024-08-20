@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite,Partner,Domains
+from .models import Developer, City, PreConstruction, PreConstructionImage, PreConstructionFloorPlan, Event, News, Favourite,Partner,Domains,TrackingEvent
 from accounts.serializers import AgentSerializer
 
 
@@ -136,3 +136,9 @@ class DomainsSerializer(serializers.ModelSerializer):
         model = Domains
         fields = '__all__'
         ordering = ['id']
+
+
+class TrackingEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrackingEvent
+        fields = '__all__'
