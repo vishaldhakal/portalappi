@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -204,5 +207,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.resend.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'resend'
-EMAIL_HOST_PASSWORD = 're_aRaKbq9d_7excbhH9zChEHdC3qdmD2Wq3'
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+EMAIL_HOST_PASSWORD = os.getenv("RESEND_APIKEY", default="")
