@@ -79,7 +79,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = None
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 } """
-
+""" RESEND_APIKEY=re_6fnpZwDs_8TafrzxPgB3nfL1mPGtFmwse
+ """
 
 DATABASES = {
     'default': {
