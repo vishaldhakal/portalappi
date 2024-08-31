@@ -603,30 +603,6 @@ def validate_message(message):
 
 
 
-def send_to_followupboss(name, email, phone, message, city):
-    url = "https://api.followupboss.com/v1/events"
-    payload = {
-        "person": {
-            "contacted": False,
-            "firstName": name.split()[0],
-            "lastName": " ".join(name.split()[1:]) if len(name.split()) > 1 else "",
-            "emails": [{"value": email}],
-            "phones": [{"value": phone}],
-            "tags": [city]
-        },
-        "source": "condomonk.ca",
-        "system": "Custom Website",
-        "type": "Inquiry",
-        "message": message
-    }
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "authorization": f"Basic {os.environ.get('FUB_SECRET')}"
-    }
-    response = requests.post(url, json=payload, headers=headers)
-    return response.status_code == 200
-
 @api_view(["POST"])
 def ContactFormSubmission(request):
     if request.method == "POST":
@@ -642,9 +618,6 @@ def ContactFormSubmission(request):
         city = request.POST["cityy"]
 
         body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}\nIs a realtor?: {realtor}"
-
-        # Send to Follow Up Boss
-        fub_success = send_to_followupboss(name, email, phone, message, city)
 
         if validate_name(name) and validate_email(email) and validate_phone(phone):
             if City.objects.filter(name=city).exists():
@@ -686,10 +659,7 @@ def ContactFormSubmission(request):
 
         email.send(fail_silently=False)
         
-        if fub_success:
-            return HttpResponse("Success - Data sent to Follow Up Boss and email sent")
-        else:
-            return HttpResponse(f"Basic {os.environ.get('FUB_SECRET')}")
+        return HttpResponse("Success")
     else:
         return HttpResponse("Not a POST request")
     
