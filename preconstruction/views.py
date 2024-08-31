@@ -1,4 +1,6 @@
 import re
+import requests
+import os
 from rest_framework import status
 from django.core.mail import send_mail, EmailMultiAlternatives, EmailMessage
 from rest_framework.parsers import JSONParser
@@ -19,33 +21,7 @@ import datetime
 from rest_framework import generics
 from .serializers import *
 from django.utils.text import slugify
-""" import asyncio
-from sydney import SydneyClient
 
-sydney = SydneyClient()
-
-async def clientt(prompt) -> str:
-    async with SydneyClient() as sydney:
-        print(prompt)
-        if prompt == "!reset":
-            await sydney.reset_conversation()
-            return "Conversation reset"
-        elif prompt == "!exit":
-            return "Goodbye"
-        else:
-            newp = prompt+ " answer it under 250 letters"
-            responses = []
-            async for response in sydney.ask_stream(newp):
-                responses.append(response)
-            
-            return ''.join(responses)
-
-@api_view(['POST'])
-def robotView(request):
-    data = request.data
-    prompt = data.get("prompt")
-    return Response({"message": asyncio.run(clientt(prompt))})
- """
 
 class LargeResultsSetPagination(PageNumberPagination):
     page_size = 100
@@ -626,12 +602,35 @@ def validate_message(message):
     return True
 
 
+
+def send_to_followupboss(name, email, phone, message, city):
+    url = "https://api.followupboss.com/v1/events"
+    payload = {
+        "person": {
+            "contacted": False,
+            "firstName": name.split()[0],
+            "lastName": " ".join(name.split()[1:]) if len(name.split()) > 1 else "",
+            "emails": [{"value": email}],
+            "phones": [{"value": phone}],
+            "tags": [city]
+        },
+        "source": "condomonk.ca",
+        "system": "Custom Website",
+        "type": "Inquiry",
+        "message": message
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "authorization": f"Basic {os.environ.get('FUB_SECRET')}"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    return response.status_code == 200
+
 @api_view(["POST"])
 def ContactFormSubmission(request):
     if request.method == "POST":
-        subject = "Inquiry about " + \
-            request.POST["proj_name"]+" in " + \
-            request.POST["cityy"]+" - Condomonk"
+        subject = f"Inquiry about {request.POST['proj_name']} in {request.POST['cityy']} - Condomonk"
         emaill = "Condomonk <info@condomonk.ca>"
         headers = {'Reply-To': request.POST["email"]}
 
@@ -640,12 +639,14 @@ def ContactFormSubmission(request):
         phone = request.POST["phone"]
         message = request.POST["message"]
         realtor = request.POST["realtor"]
+        city = request.POST["cityy"]
 
-        if validate_name(request.POST["name"]) and validate_email(request.POST["email"]) and validate_phone(request.POST["phone"]):
-            body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}\nIs a realtor?: {realtor}"
-            
-            city = request.POST["cityy"]
+        body = f"Name: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}\nIs a realtor?: {realtor}"
 
+        # Send to Follow Up Boss
+        fub_success = send_to_followupboss(name, email, phone, message, city)
+
+        if validate_name(name) and validate_email(email) and validate_phone(phone):
             if City.objects.filter(name=city).exists():
                 sss = city.replace("-", " ")
                 slug_city = sss.title()
@@ -655,51 +656,42 @@ def ContactFormSubmission(request):
                 if partnerss:
                     part = partnerss[0]
                     today_date = datetime.date.today()
-                    sales_all = LeadsCount.objects.all()
-                    check = 0
-
-                    for sale in sales_all:
-                        if sale.date == today_date and sale.partner == part:
-                            check = 1
-
-                    if check == 0:
-                        saless = LeadsCount.objects.create(
-                            lead_count=0, date=today_date, partner=part)
-                        saless.save()
-
-                    sale_today = LeadsCount.objects.get(
-                        date=today_date, partner=part)
-                    get_sale_count = sale_today.lead_count
-                    sale_today.lead_count = get_sale_count+1
+                    
+                    sale_today, created = LeadsCount.objects.get_or_create(
+                        date=today_date, partner=part,
+                        defaults={'lead_count': 0}
+                    )
+                    sale_today.lead_count += 1
                     sale_today.save()
+
                     email = EmailMessage(
-                        subject, body, emaill, ["contact@homebaba.ca",part.email],
+                        subject, body, emaill, ["contact@homebaba.ca", part.email],
                         reply_to=[email]
                     )
-                    email.send(fail_silently=False)
                 else:
                     email = EmailMessage(
-                        subject, body, emaill, to=["contact@homebaba.ca"],
+                        subject, body, emaill, ["contact@homebaba.ca"],
                         reply_to=[email]
                     )
-                    email.send(fail_silently=False)
-                return HttpResponse("Sucess")
             else:
                 email = EmailMessage(
                     subject, body, emaill, ["contact@homebaba.ca"],
                     reply_to=[email], headers=headers
                 )
-                email.send(fail_silently=False)
-                return HttpResponse("Sucess")
         else:
             email = EmailMessage(
                 subject, body, emaill, ["contact@homebaba.ca"],
                 reply_to=[email], headers=headers
             )
-            email.send(fail_silently=False)
-            return HttpResponse("Sucess")
+
+        email.send(fail_silently=False)
+        
+        if fub_success:
+            return HttpResponse("Success - Data sent to Follow Up Boss and email sent")
+        else:
+            return HttpResponse("Partial Success - Email sent but Failed to send data to Follow Up Boss")
     else:
-        return HttpResponse("Not post req")
+        return HttpResponse("Not a POST request")
     
 
 @api_view(['GET'])
