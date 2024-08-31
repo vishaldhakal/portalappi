@@ -622,7 +622,7 @@ def send_to_followupboss(name, email, phone, message, city):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "authorization": "Basic fka_00NUBl1vlfsExrfVW2cBaYj1rWg2z5Ch7g"
+        "authorization": f"Basic {os.environ.get('FUB_SECRET')}"
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.status_code == 200
@@ -689,7 +689,7 @@ def ContactFormSubmission(request):
         if fub_success:
             return HttpResponse("Success - Data sent to Follow Up Boss and email sent")
         else:
-            return HttpResponse("Partial Success - Email sent but Failed to send data to Follow Up Boss")
+            return HttpResponse(f"Basic {os.environ.get('FUB_SECRET')}")
     else:
         return HttpResponse("Not a POST request")
     
