@@ -673,28 +673,27 @@ def ContactFormSubmission(request):
                     sale_today.lead_count = get_sale_count+1
                     sale_today.save()
                     email = EmailMessage(
-                        subject, body, emaill, [
-                            "milan@homebaba.ca","contact@homebaba.ca",part.email],
+                        subject, body, emaill, ["contact@homebaba.ca",part.email],
                         reply_to=[email]
                     )
                     email.send(fail_silently=False)
                 else:
                     email = EmailMessage(
-                        subject, body, emaill, to=["milan@homebaba.ca","contact@homebaba.ca"],
+                        subject, body, emaill, to=["contact@homebaba.ca"],
                         reply_to=[email]
                     )
                     email.send(fail_silently=False)
                 return HttpResponse("Sucess")
             else:
                 email = EmailMessage(
-                    subject, body, emaill, ["milan@homebaba.ca","contact@homebaba.ca"],
+                    subject, body, emaill, ["contact@homebaba.ca"],
                     reply_to=[email], headers=headers
                 )
                 email.send(fail_silently=False)
                 return HttpResponse("Sucess")
         else:
             email = EmailMessage(
-                subject, body, emaill, ["milan@homebaba.ca","contact@homebaba.ca"],
+                subject, body, emaill, ["contact@homebaba.ca"],
                 reply_to=[email], headers=headers
             )
             email.send(fail_silently=False)
