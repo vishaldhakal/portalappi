@@ -622,7 +622,7 @@ def send_to_followupboss(name, email, phone, message, city):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "authorization": f"Basic {os.environ.get('FUB_SECRET')}"
+        "authorization": "Basic fka_00NUBl1vlfsExrfVW2cBaYj1rWg2z5Ch7g"
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.status_code == 200
