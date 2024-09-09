@@ -87,11 +87,10 @@ DATABASES = {
         'NAME': 'condomonk',
         'USER': 'condomonk_admin',
         'PASSWORD': 'condomonkadminpassword',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'kscwsc4oo848g84s04c0c0ws',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
