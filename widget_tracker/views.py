@@ -10,11 +10,11 @@ from .serializers import ConfigSerializer, PageviewSerializer, VisitorSerializer
 
 class ConfigView(APIView):
     def post(self, request):
-        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        customer = get_object_or_404(Customer, idd=request.data.get('customerId'))
         config = {
             "widgetConfig": True,
             "captureForms": True,
-            "customerId": customer.id,
+            "customerId": customer.idd,
         }
         serializer = ConfigSerializer(data=config)
         if serializer.is_valid():
@@ -23,7 +23,7 @@ class ConfigView(APIView):
 
 class PageView(APIView):
     def post(self, request):
-        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        customer = get_object_or_404(Customer, idd=request.data.get('customerId'))
         visitor, _ = Visitor.objects.get_or_create(id=request.data.get('visitorId'), customer=customer)
         
         serializer = PageviewSerializer(data=request.data)
@@ -34,7 +34,7 @@ class PageView(APIView):
 
 class IdentifyView(APIView):
     def post(self, request):
-        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        customer = get_object_or_404(Customer, idd=request.data.get('customerId'))
         visitor = get_object_or_404(Visitor, id=request.data.get('visitorId'), customer=customer)
         
         serializer = VisitorSerializer(visitor, data=request.data, partial=True)
@@ -45,7 +45,7 @@ class IdentifyView(APIView):
 
 class FormView(APIView):
     def post(self, request):
-        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        customer = get_object_or_404(Customer, idd=request.data.get('customerId'))
         visitor = get_object_or_404(Visitor, id=request.data.get('visitorId'), customer=customer)
         
         serializer = FormSubmissionSerializer(data=request.data.get('form', {}))
