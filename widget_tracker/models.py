@@ -1,7 +1,7 @@
 from django.db import models
 
 class Customer(models.Model):
-    idd = models.CharField(max_length=50, primary_key=True)
+    idd = models.IntegerField(default=1, primary_key=True)
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
