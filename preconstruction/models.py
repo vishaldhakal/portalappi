@@ -183,16 +183,3 @@ class Domains(models.Model):
 
     def __str__(self):
         return str(self.domain)
-
-
-class TrackingEvent(models.Model):
-    site_id = models.CharField(max_length=100,blank=True)
-    hit_type = models.CharField(max_length=50)
-    event_category = models.CharField(max_length=100, null=True, blank=True)
-    event_data = models.JSONField(null=True, blank=True)
-    page_url = models.URLField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.site_id} - {self.hit_type} - {self.timestamp}"

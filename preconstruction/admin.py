@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Developer, PreConstruction,Domains, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite, FavouriteEvent, FavouriteNews,Partner,TrackingEvent
+from .models import Developer, PreConstruction,Domains, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite, FavouriteEvent, FavouriteNews,Partner
 
 
 class PreConstructionImageAdmin(admin.StackedInline):
@@ -38,4 +38,3 @@ admin.site.register(Favourite)
 admin.site.register(FavouriteEvent)
 admin.site.register(FavouriteNews)
 admin.site.register(Partner)
-admin.site.register(TrackingEvent)

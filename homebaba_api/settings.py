@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'accounts',
     'preconstruction',
     'drf_yasg',
+    'widget_tracker',
 ]
 
 MIDDLEWARE = [
