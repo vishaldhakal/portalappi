@@ -14,7 +14,7 @@ class ConfigView(APIView):
         config = {
             "widgetConfig": True,
             "captureForms": True,
-            "customerId": customer.idd,
+            "customerId": 1,
         }
         serializer = ConfigSerializer(data=config)
         if serializer.is_valid():
