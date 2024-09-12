@@ -9,7 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('preconstruction.urls')),
     path('api/', include('accounts.urls')),
-    path('track/', include('widget_tracker.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 
