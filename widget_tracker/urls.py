@@ -1,10 +1,10 @@
 from django.urls import path
-from . import views
+from .views import ConfigView, PageView, IdentifyView, FormView, pixel
 
 urlpatterns = [
-    path('config/', views.config, name='config'),
-    path('pages/', views.pages, name='pages'),
-    path('identify/', views.identify, name='identify'),
-    path('form/', views.form, name='form'),
-    path('pixel/', views.pixel, name='pixel'),
+    path('config/', ConfigView.as_view(), name='config'),
+    path('pages/', PageView.as_view(), name='pages'),
+    path('identify/', IdentifyView.as_view(), name='identify'),
+    path('form/', FormView.as_view(), name='form'),
+    path('pixel/', pixel, name='pixel'),
 ]

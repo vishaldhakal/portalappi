@@ -1,78 +1,67 @@
-import json
-import base64
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.http import require_http_methods
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+import base64
 from .models import Customer, Visitor, Pageview, FormSubmission, FormField
+from .serializers import ConfigSerializer, PageviewSerializer, VisitorSerializer, FormSubmissionSerializer
 
-@ensure_csrf_cookie
-@require_http_methods(["POST"])
-def config(request):
-    data = json.loads(request.body)
-    customer = get_object_or_404(Customer, id=data.get('customerId'))
-    
-    config = {
-        "widgetConfig": True,
-        "captureForms": True,
-        "customerId": customer.id,
-    }
-    
-    return JsonResponse(config)
+class ConfigView(APIView):
+    def post(self, request):
+        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        config = {
+            "widgetConfig": True,
+            "captureForms": True,
+            "customerId": customer.id,
+        }
+        serializer = ConfigSerializer(data=config)
+        if serializer.is_valid():
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@ensure_csrf_cookie
-@require_http_methods(["POST"])
-def pages(request):
-    data = json.loads(request.body)
-    customer = get_object_or_404(Customer, id=data.get('customerId'))
-    visitor, _ = Visitor.objects.get_or_create(id=data.get('visitorId'), customer=customer)
-    
-    Pageview.objects.create(
-        visitor=visitor,
-        url=data.get('url'),
-        title=data.get('title'),
-        referrer=data.get('referrer')
-    )
-    
-    return JsonResponse({"status": "success"})
+class PageView(APIView):
+    def post(self, request):
+        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        visitor, _ = Visitor.objects.get_or_create(id=request.data.get('visitorId'), customer=customer)
+        
+        serializer = PageviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(visitor=visitor)
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@ensure_csrf_cookie
-@require_http_methods(["POST"])
-def identify(request):
-    data = json.loads(request.body)
-    customer = get_object_or_404(Customer, id=data.get('customerId'))
-    visitor = get_object_or_404(Visitor, id=data.get('visitorId'), customer=customer)
-    
-    visitor.email = data.get('email')
-    visitor.save()
-    
-    return JsonResponse({"status": "success"})
+class IdentifyView(APIView):
+    def post(self, request):
+        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        visitor = get_object_or_404(Visitor, id=request.data.get('visitorId'), customer=customer)
+        
+        serializer = VisitorSerializer(visitor, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@ensure_csrf_cookie
-@require_http_methods(["POST"])
-def form(request):
-    data = json.loads(request.body)
-    customer = get_object_or_404(Customer, id=data.get('customerId'))
-    visitor = get_object_or_404(Visitor, id=data.get('visitorId'), customer=customer)
-    
-    form_data = data.get('form', {})
-    form_submission = FormSubmission.objects.create(
-        visitor=visitor,
-        form_id=form_data.get('id'),
-        form_action=form_data.get('action'),
-        form_method=form_data.get('method')
-    )
-    
-    for field in form_data.get('fields', []):
-        FormField.objects.create(
-            form_submission=form_submission,
-            name=field.get('name'),
-            value=field.get('value')
-        )
-    
-    return JsonResponse({"status": "success"})
+class FormView(APIView):
+    def post(self, request):
+        customer = get_object_or_404(Customer, id=request.data.get('customerId'))
+        visitor = get_object_or_404(Visitor, id=request.data.get('visitorId'), customer=customer)
+        
+        serializer = FormSubmissionSerializer(data=request.data.get('form', {}))
+        if serializer.is_valid():
+            form_submission = serializer.save(visitor=visitor)
+            
+            for field in request.data.get('form', {}).get('fields', []):
+                FormField.objects.create(
+                    form_submission=form_submission,
+                    name=field.get('name'),
+                    value=field.get('value')
+                )
+            
+            return Response({"status": "success"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@ensure_csrf_cookie
+@api_view(['GET'])
 def pixel(request):
-    # Serve a 1x1 transparent GIF
     return HttpResponse(base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'), content_type='image/gif')
