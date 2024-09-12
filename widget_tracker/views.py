@@ -10,7 +10,7 @@ from .serializers import ConfigSerializer, PageviewSerializer, VisitorSerializer
 
 class ConfigView(APIView):
     def post(self, request):
-        customer = get_object_or_404(Customer, idd=request.data.get('customerId'))
+        customer = get_object_or_404(Customer, idd=int(request.data.get('customerId')))
         config = {
             "widgetConfig": True,
             "captureForms": True,
