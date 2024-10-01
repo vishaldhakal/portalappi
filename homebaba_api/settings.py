@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '6phatry1)!$p*oipu*d)#e1h)1k7c7lre807@v*2&p*$2es8b*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -17,7 +17,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',
+    'jazzmin',  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -27,8 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_rest_passwordreset',
     "rest_framework.authtoken",
-    'ckeditor',
-    'ckeditor_uploader',
+    'django_ckeditor_5',  # Keep this for CKEditor 5
     'corsheaders',
     'drf_multiple_model',
     'django_summernote',
@@ -37,7 +36,6 @@ INSTALLED_APPS = [
     'preconstruction',
     'drf_yasg',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,7 +76,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = None
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-} """
+}  """
 
 
 DATABASES = {
@@ -133,13 +131,17 @@ STATICFILES_DIRS = [
 ]
 
 
-MEDIA_URL = 'media/'
-
-MEDIA_ROOT = Path(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',

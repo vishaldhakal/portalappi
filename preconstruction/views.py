@@ -147,7 +147,7 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
             price_starting_from=price_starting_from,
             price_to=price_to,
             occupancy=occupancy,
-            no_of_units=no_of_units
+            no_of_units=no_of_units,
         )
 
         if is_featured == "true":
@@ -501,10 +501,16 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         instance.name = request.data.get('name')
         city_details = request.data.get('details')
+        townhomes_details = request.data.get('townhomes_details')
+        condos_details = request.data.get('condos_details')
+        detached_details = request.data.get('detached_details')
         base_slug = slugify(request.data.get('name'))
         unique_slug = base_slug
         instance.slug = unique_slug
         instance.details = city_details
+        instance.townhomes_details = townhomes_details
+        instance.condos_details = condos_details
+        instance.detached_details = detached_details
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
