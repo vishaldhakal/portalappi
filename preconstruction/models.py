@@ -4,7 +4,6 @@ from accounts.models import Agent
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Developer(models.Model):
@@ -24,11 +23,8 @@ class Developer(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
-    details = CKEditor5Field(blank=True, config_name='default')
-    townhomes_details = CKEditor5Field(blank=True, config_name='default')
-    condos_details = CKEditor5Field(blank=True, config_name='default')
-    detached_details = CKEditor5Field(blank=True, config_name='default')
-    
+    details = SummernoteTextField(blank=True)
+
     def __str__(self):
         return self.name
 
@@ -68,7 +64,7 @@ class PreConstruction(models.Model):
     project_type = models.CharField(
         max_length=500, choices=PROJECT_CHOICES, default="NaN"
     )
-    description = CKEditor5Field(blank=True, config_name='default')
+    description = SummernoteTextField(blank=True)
     project_address = models.CharField(max_length=500)
     status = models.CharField(
         max_length=500, choices=STATUS_CHOICES, default="Upcoming"
