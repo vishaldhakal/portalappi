@@ -18,25 +18,31 @@ class CitySerializer(serializers.ModelSerializer):
 class CitySerializerMain(serializers.ModelSerializer):
     class Meta:
         model = City
-        exclude = ['condos_details','townhomes_details','detached_details']
+        exclude = ['condos_details','townhomes_details','detached_details','upcoming_details']
         ordering = ['name']
 
 class CitySerializerCondos(serializers.ModelSerializer):
     class Meta:
         model = City
-        exclude = ['details','townhomes_details','detached_details']
+        exclude = ['details','townhomes_details','detached_details','upcoming_details']
         ordering = ['name']
 
 class CitySerializerDetached(serializers.ModelSerializer):
     class Meta:
         model = City
-        exclude = ['condos_details','townhomes_details','details']
+        exclude = ['condos_details','townhomes_details','details','upcoming_details']
         ordering = ['name']
 
 class CitySerializerTownhomes(serializers.ModelSerializer):
     class Meta:
         model = City
-        exclude = ['condos_details','details','detached_details']
+        exclude = ['condos_details','details','detached_details','upcoming_details']
+        ordering = ['name']
+
+class CitySerializerUpcoming(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['condos_details','townhomes_details','detached_details','details']
         ordering = ['name']
 
 class CitySerializerSmallest(serializers.ModelSerializer):

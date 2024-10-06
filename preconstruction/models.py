@@ -28,6 +28,7 @@ class City(models.Model):
     condos_details = SummernoteTextField(blank=True)
     townhomes_details = SummernoteTextField(blank=True)
     detached_details = SummernoteTextField(blank=True)
+    upcoming_details = SummernoteTextField(blank=True)
 
     def __str__(self):
         return self.name

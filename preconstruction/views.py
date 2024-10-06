@@ -294,6 +294,8 @@ def PreConstructionsCityView(request, slug):
 
     if status:
         preconstructions = preconstructions.filter(status=status)
+        if status == "Upcoming":
+            cityser = CitySerializerUpcoming(city)
     if occupancy:
         preconstructions = preconstructions.filter(occupancy=occupancy)
     if project_type:
@@ -492,6 +494,10 @@ class CityListCreateView(generics.ListCreateAPIView):
         data = request.data
         city_name = data.get('name')
         city_details = data.get('details')
+        condos_details = data.get('condos_details')
+        townhomes_details = data.get('townhomes_details')
+        detached_details = data.get('detached_details')
+        upcoming_details = data.get('upcoming_details')
         base_slug = slugify(city_name)
         unique_slug = base_slug
         num = 1
@@ -499,7 +505,7 @@ class CityListCreateView(generics.ListCreateAPIView):
             unique_slug = base_slug + "-" + str(num)
             num += 1
         city = City.objects.create(
-            name=city_name, slug=unique_slug, details=city_details)
+            name=city_name, slug=unique_slug, details=city_details, condos_details=condos_details, townhomes_details=townhomes_details, detached_details=detached_details, upcoming_details=upcoming_details)
         serializer = CitySerializer(city)
         return Response(serializer.data)
 
@@ -512,10 +518,18 @@ class CityRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         instance.name = request.data.get('name')
         city_details = request.data.get('details')
+        condos_details = request.data.get('condos_details')
+        townhomes_details = request.data.get('townhomes_details')
+        detached_details = request.data.get('detached_details')
+        upcoming_details = request.data.get('upcoming_details')
         base_slug = slugify(request.data.get('name'))
         unique_slug = base_slug
         instance.slug = unique_slug
         instance.details = city_details
+        instance.condos_details = condos_details
+        instance.townhomes_details = townhomes_details
+        instance.detached_details = detached_details
+        instance.upcoming_details = upcoming_details
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
