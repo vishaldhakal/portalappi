@@ -671,3 +671,12 @@ def slugify_all_news(request):
         news.slug = slugify(news.news_title)
         news.save()
     return Response({"message": "done"})
+
+
+@api_view(['GET'])
+def PreConstructionsDeveloper(request, slug):
+    developer = Developer.objects.get(slug=slug)
+    dev_serializer = DeveloperSerializer(developer)
+    preconstructions = PreConstruction.objects.filter(developer__slug=slug)
+    serializer = PreConstructionSerializerSmall(preconstructions, many=True)
+    return Response({"developer": dev_serializer.data, "precons": serializer.data})

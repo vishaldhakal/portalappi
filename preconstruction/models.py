@@ -9,6 +9,7 @@ from django.dispatch import receiver
 class Developer(models.Model):
     image = models.FileField()
     name = models.CharField(max_length=500)
+    slug = models.SlugField(max_length=520, unique=True, blank=True)
     phone = models.CharField(max_length=200, blank=True)
     website_link = models.TextField(blank=True)
     details = models.TextField()
