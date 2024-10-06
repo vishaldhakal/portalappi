@@ -25,6 +25,9 @@ class City(models.Model):
     name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
     details = SummernoteTextField(blank=True)
+    condos_details = SummernoteTextField(blank=True)
+    townhomes_details = SummernoteTextField(blank=True)
+    detached_details = SummernoteTextField(blank=True)
 
     def __str__(self):
         return self.name

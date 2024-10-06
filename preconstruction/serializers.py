@@ -15,6 +15,30 @@ class CitySerializer(serializers.ModelSerializer):
         fields = '__all__'
         ordering = ['name']
 
+class CitySerializerMain(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['condos_details','townhomes_details','detached_details']
+        ordering = ['name']
+
+class CitySerializerCondos(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['details','townhomes_details','detached_details']
+        ordering = ['name']
+
+class CitySerializerDetached(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['condos_details','townhomes_details','details']
+        ordering = ['name']
+
+class CitySerializerTownhomes(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        exclude = ['condos_details','details','detached_details']
+        ordering = ['name']
+
 class CitySerializerSmallest(serializers.ModelSerializer):
     class Meta:
         model = City

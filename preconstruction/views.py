@@ -278,7 +278,7 @@ def PreConstructionsCityView(request, slug):
     is_featured = request.GET.get('is_featured')
     price_starting_from = request.GET.get('price_starting_from')
     city = City.objects.get(slug=slug)
-    cityser = CitySerializer(city)
+    cityser = []
 
     partt = Partner.objects.filter(cities=city)
     serializer2 = PartnerSerializer(partt, many=True)
@@ -298,6 +298,17 @@ def PreConstructionsCityView(request, slug):
         preconstructions = preconstructions.filter(occupancy=occupancy)
     if project_type:
         preconstructions = preconstructions.filter(project_type=project_type)
+        if project_type == "Condo":
+            cityser = CitySerializerCondos(city)
+        elif project_type == "Townhome":
+            cityser = CitySerializerTownhomes(city)
+        elif project_type == "Detached":
+            cityser = CitySerializerDetached(city)
+        else:
+            cityser = CitySerializerMain(city)
+    else:
+        cityser = CitySerializerMain(city)
+        
     if price_starting_from:
         preconstructions = preconstructions.filter(
             price_starting_from__gte=price_starting_from)
