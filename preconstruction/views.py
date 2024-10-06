@@ -278,7 +278,7 @@ def PreConstructionsCityView(request, slug):
     is_featured = request.GET.get('is_featured')
     price_starting_from = request.GET.get('price_starting_from')
     city = City.objects.get(slug=slug)
-    cityser = []
+    cityser= CitySerializerMain(city)
 
     partt = Partner.objects.filter(cities=city)
     serializer2 = PartnerSerializer(partt, many=True)
@@ -308,8 +308,7 @@ def PreConstructionsCityView(request, slug):
             cityser = CitySerializerDetached(city)
         else:
             cityser = CitySerializerMain(city)
-    else:
-        cityser = CitySerializerMain(city)
+
         
     if price_starting_from:
         preconstructions = preconstructions.filter(
