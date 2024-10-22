@@ -281,6 +281,7 @@ def PreConstructionsCityView(request, slug):
     project_type = request.GET.get('project_type')
     is_featured = request.GET.get('is_featured')
     price_starting_from = request.GET.get('price_starting_from')
+    price_to = request.GET.get('price_to')
     city = City.objects.get(slug=slug)
     cityser= CitySerializerMain(city)
 
@@ -317,6 +318,8 @@ def PreConstructionsCityView(request, slug):
     if price_starting_from:
         preconstructions = preconstructions.filter(
             price_starting_from__gte=price_starting_from)
+    if price_to:
+        preconstructions = preconstructions.filter(price_starting_from__lte=price_to)
 
     preconstructions = paginator.paginate_queryset(preconstructions, request)
         
