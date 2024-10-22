@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'django_rest_passwordreset',
     "rest_framework.authtoken",
     'ckeditor',
@@ -73,25 +74,25 @@ WSGI_APPLICATION = 'homebaba_api.wsgi.application'
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
-""" 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-} """
+} 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'condomonk',
-        'USER': 'condomonk_admin',
-        'PASSWORD': 'condomonkadminpassword',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'condomonk',
+#         'USER': 'condomonk_admin',
+#         'PASSWORD': 'condomonkadminpassword',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 
 # Password validation

@@ -21,6 +21,7 @@ import datetime
 from rest_framework import generics
 from .serializers import *
 from django.utils.text import slugify
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -81,6 +82,9 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
     queryset = PreConstruction.objects.all()
     serializer_class = PreConstructionSerializer
     pagination_class = LargeResultsSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['city__slug', 'status', 'project_type', 'is_featured', 'price_starting_from', 'occupancy']
+
 
     def list(self, request, *args, **kwargs):
         is_featured = request.GET.get('is_featured',False)
