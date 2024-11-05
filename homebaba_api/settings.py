@@ -155,6 +155,8 @@ SUMMERNOTE_CONFIG = {
         'fontNames': ['Montserrat'],
         'fontSizes': ['8', '9', '10', '11', '12', '13', '14', '16', '17', '18', '19', '24', '36'],
     },
+    'width': '100%',
+    'height': '580',
 }
 
 JAZZMIN_SETTINGS = {
