@@ -1,5 +1,5 @@
 from django.db import models
-from django_summernote.fields import SummernoteTextField
+from tinymce.models import HTMLField
 from accounts.models import Agent
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
@@ -24,11 +24,11 @@ class Developer(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
-    details = SummernoteTextField(blank=True)
-    condos_details = SummernoteTextField(blank=True)
-    townhomes_details = SummernoteTextField(blank=True)
-    detached_details = SummernoteTextField(blank=True)
-    upcoming_details = SummernoteTextField(blank=True)
+    details = HTMLField(blank=True)
+    condos_details = HTMLField(blank=True)
+    townhomes_details = HTMLField(blank=True)
+    detached_details = HTMLField(blank=True)
+    upcoming_details = HTMLField(blank=True)
 
     def __str__(self):
         return self.name
@@ -69,7 +69,7 @@ class PreConstruction(models.Model):
     project_type = models.CharField(
         max_length=500, choices=PROJECT_CHOICES, default="NaN"
     )
-    description = SummernoteTextField(blank=True)
+    description = HTMLField(blank=True)
     project_address = models.CharField(max_length=500)
     status = models.CharField(
         max_length=500, choices=STATUS_CHOICES, default="Upcoming"
@@ -109,7 +109,7 @@ class PreConstructionFloorPlan(models.Model):
 
 
 class Event(models.Model):
-    event_description = SummernoteTextField(blank=True)
+    event_description = HTMLField(blank=True)
     event_date = models.DateTimeField()
     event_link = models.CharField(max_length=2000, default="#")
     event_title = models.CharField(max_length=1000, blank=True)
@@ -123,7 +123,7 @@ class News(models.Model):
     news_title = models.CharField(max_length=1000)
     slug = models.CharField(max_length=1000, blank=True)
     news_thumbnail = models.FileField(blank=True)
-    news_description = SummernoteTextField(blank=True)
+    news_description = HTMLField(blank=True)
     date_of_upload = models.DateField(auto_now_add=True)
     last_updated = models.DateField(auto_now=True)
     news_link = models.CharField(max_length=2000, default="#")

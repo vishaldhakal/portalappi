@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/', include('accounts.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-
+    path('tinymce/', include('tinymce.urls')),
 ]
 
 if settings.DEBUG:
