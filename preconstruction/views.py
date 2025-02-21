@@ -1,27 +1,20 @@
 import re
-import requests
-import os
 from rest_framework import status
-from django.core.mail import send_mail, EmailMultiAlternatives, EmailMessage
+from django.core.mail import EmailMultiAlternatives, EmailMessage
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import HttpResponse
 from rest_framework.decorators import api_view
-from django.conf import settings
 from rest_framework.response import Response
 from .models import Developer, PreConstruction, PreConstructionImage, City, PreConstructionFloorPlan, Event, News, Favourite,Partner,LeadsCount
 from rest_framework.pagination import PageNumberPagination
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-import json
-import math
-import csv
 from accounts.models import Agent
 import datetime
 from rest_framework import generics
 from .serializers import *
 from django.utils.text import slugify
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 
 
 class LargeResultsSetPagination(PageNumberPagination):
@@ -573,10 +566,18 @@ def get_all_city(request):
 
 @api_view(['GET'])
 def get_all_precons_search(request):
-    precons = PreConstruction.objects.all()
+    search = request.GET.get('search')
+    if search:
+        precons = PreConstruction.objects.filter(Q(project_name__icontains=search) | Q(project_address__icontains=search))
+    else:
+        precons = PreConstruction.objects.all()
     serializer = PreConstructionSearchSerializer(precons, many=True)
 
-    cities = City.objects.all()
+    if search:
+        cities = City.objects.filter(Q(name__icontains=search))
+    else:
+        cities = City.objects.all()
+
     serializer2 = CitySerializerSmall(cities,many=True)
 
     return Response({"projects": serializer.data, "cities": serializer2.data})
