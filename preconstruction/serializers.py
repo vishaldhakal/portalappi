@@ -146,7 +146,7 @@ class PreConstructionSearchSerializer(serializers.ModelSerializer):
     city = CitySerializerSmallest()
     class Meta:
         model = PreConstruction
-        fields = ['id','slug','project_name','city']
+        fields = ['id','slug','project_name','city', 'project_type']
         ordering = ['last_updated']
 
 
