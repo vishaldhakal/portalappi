@@ -129,7 +129,7 @@ class News(models.Model):
     news_link = models.CharField(max_length=2000, default="#")
 
     def __str__(self):
-        return self.event_title
+        return self.news_title
 
 
 class Favourite(models.Model):
