@@ -431,7 +431,7 @@ class NewsListCreateView(generics.ListCreateAPIView):
             news = News.objects.filter(city__slug=city)
         else:
             news = News.objects.all()
-        serializer = NewsSerializer(news, many=True)
+        serializer = NewsSerializerSmall(news, many=True)
         return Response(serializer.data)
 
 

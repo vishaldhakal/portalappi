@@ -124,8 +124,20 @@ class EventSerializer(serializers.ModelSerializer):
         ordering = ['event_date']
 
 
+class CitySerializerSmallestNews(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'slug']
+
+class NewsSerializerSmall(serializers.ModelSerializer):
+    city = CitySerializerSmallestNews()
+    class Meta:
+        model = News
+        fields = ['id', 'news_title', 'slug', 'city', 'date_of_upload', 'last_updated','news_thumbnail','news_link']
+        ordering = ['date_of_upload']
+
 class NewsSerializer(serializers.ModelSerializer):
-    city = CitySerializer()
+    city = CitySerializerSmallestNews()
 
     class Meta:
         model = News
