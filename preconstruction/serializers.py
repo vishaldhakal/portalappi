@@ -80,7 +80,7 @@ class PreConstructionFloorPlanSerializer(serializers.ModelSerializer):
 class PreConstructionSerializer(serializers.ModelSerializer):
     image = PreConstructionImageSerializer(many=True, read_only=True)
     floorplan = PreConstructionFloorPlanSerializer(many=True, read_only=True)
-    city = CitySerializer()
+    city = CitySerializerSmall()
     developer = DeveloperSerializer()
 
     class Meta:
