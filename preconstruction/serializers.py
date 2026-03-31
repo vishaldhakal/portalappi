@@ -112,9 +112,11 @@ class PreConstructionSerializerSmall(serializers.ModelSerializer):
         ordering = ["is_featured",'last_updated']
     
     def get_image(self, obj):
-        image = PreConstructionImage.objects.filter(preconstruction=obj).first()
-        serializer = PreConstructionImageSerializer(image)
-        return serializer.data
+        images = obj.image.all()
+        if images:
+            serializer = PreConstructionImageSerializer(images[0])
+            return serializer.data
+        return None
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -169,7 +171,7 @@ class CitySerializerSmallSearch(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug','preconstructions']
 
     def get_preconstructions(self, obj):
-        preconstructions = PreConstruction.objects.filter(city=obj)
+        preconstructions = obj.preconstruction_set.all()
         serializer = PreConstructionSearchSerializer(preconstructions, many=True)
         return serializer.data
 

@@ -59,20 +59,20 @@ class PreConstruction(models.Model):
     ]
     is_featured = models.BooleanField(default=False)
     developer = models.ForeignKey(Developer, on_delete=models.CASCADE)
-    occupancy = models.CharField(max_length=500)
+    occupancy = models.CharField(max_length=500, db_index=True)
     no_of_units = models.CharField(max_length=500)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     project_name = models.CharField(max_length=500)
     slug = models.CharField(max_length=1000, unique=True)
-    price_starting_from = models.FloatField(default=0)
+    price_starting_from = models.FloatField(default=0, db_index=True)
     price_to = models.FloatField(default=0)
     project_type = models.CharField(
-        max_length=500, choices=PROJECT_CHOICES, default="NaN"
+        max_length=500, choices=PROJECT_CHOICES, default="NaN", db_index=True
     )
     description = HTMLField(blank=True)
     project_address = models.CharField(max_length=500)
     status = models.CharField(
-        max_length=500, choices=STATUS_CHOICES, default="Upcoming"
+        max_length=500, choices=STATUS_CHOICES, default="Upcoming", db_index=True
     )
     co_op_available = models.BooleanField(default=False)
     date_of_upload = models.DateField(auto_now_add=True)
@@ -83,6 +83,11 @@ class PreConstruction(models.Model):
 
     class Meta:
         ordering = ("-is_featured","-last_updated",)
+        indexes = [
+            models.Index(fields=['-is_featured', '-last_updated']),
+            models.Index(fields=['city']),
+            models.Index(fields=['developer']),
+        ]
 
 
 class PreConstructionImage(models.Model):

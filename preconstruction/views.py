@@ -85,13 +85,27 @@ class PreConstructionListCreateView(generics.ListCreateAPIView):
         page_size = request.GET.get('page_size',60)
         smallerv = request.GET.get('small','All')
 
+        preconstructions = PreConstruction.objects.select_related('city', 'developer')
+        
         if is_featured:
-            preconstructions = PreConstruction.objects.filter(is_featured=True)
-        else:
-            preconstructions = PreConstruction.objects.all()
+            preconstructions = preconstructions.filter(is_featured=True)
         
         if city != 'All':
             preconstructions = preconstructions.filter(city__slug=city)
+            
+        if smallerv != "All":
+            preconstructions = preconstructions.only(
+                'id', 'slug', 'project_name', 'status', 'project_type', 
+                'project_address', 'occupancy', 'last_updated', 'is_featured', 
+                'city__id', 'city__name', 'city__slug', 'developer_id'
+            )
+        else:
+            preconstructions = preconstructions.prefetch_related('image').only(
+                'id', 'slug', 'project_name', 'price_starting_from', 'price_to', 
+                'is_featured', 'status', 'project_type', 'project_address', 
+                'occupancy', 'last_updated', 'city__id', 'city__name', 'city__slug', 
+                'developer__id', 'developer__name'
+            )
         
 
 
@@ -237,7 +251,7 @@ class PreConstructionRetrieveUpdateDeleteView(generics.RetrieveUpdateDestroyAPIV
 
 @api_view(['GET'])
 def get_related_precons(request, city):
-    precons = PreConstruction.objects.filter(city__slug=city)[:4]
+    precons = PreConstruction.objects.select_related('city', 'developer').prefetch_related('image').filter(city__slug=city)[:4]
     serializer = PreConstructionSerializerSmall(precons, many=True)
     return Response(serializer.data)
 
@@ -259,7 +273,7 @@ def remove_last_part_of_slug(request):
 
 @api_view(['GET'])
 def PreConstructionDetailView(request, slug):
-    preconstruction = PreConstruction.objects.get(slug=slug)
+    preconstruction = PreConstruction.objects.select_related('city', 'developer').prefetch_related('image', 'floorplan').get(slug=slug)
     serializer = PreConstructionSerializer(preconstruction)
     cityyy = preconstruction.city
     partt = Partner.objects.filter(cities=cityyy)
@@ -281,10 +295,12 @@ def PreConstructionsCityView(request, slug):
     partt = Partner.objects.filter(cities=city)
     serializer2 = PartnerSerializer(partt, many=True)
 
+    preconstructions = PreConstruction.objects.select_related('city', 'developer').prefetch_related('image').filter(city__slug=slug)
+
     if is_featured:
-        preconstructions = PreConstruction.objects.filter(city__slug=slug,is_featured=True).order_by('-is_featured','-last_updated')
+        preconstructions = preconstructions.filter(is_featured=True).order_by('-is_featured','-last_updated')
     else:
-        preconstructions = PreConstruction.objects.filter(city__slug=slug,is_featured=False).order_by('-is_featured','-last_updated')
+        preconstructions = preconstructions.filter(is_featured=False).order_by('-is_featured','-last_updated')
         
     #add pagination
     paginator = PageNumberPagination()
@@ -567,10 +583,9 @@ def get_all_city(request):
 @api_view(['GET'])
 def get_all_precons_search(request):
     search = request.GET.get('search')
+    precons = PreConstruction.objects.select_related('city').only('id', 'slug', 'project_name', 'project_type', 'city__id', 'city__slug', 'city__name')
     if search:
-        precons = PreConstruction.objects.filter(Q(project_name__icontains=search) | Q(project_address__icontains=search))
-    else:
-        precons = PreConstruction.objects.all()
+        precons = precons.filter(Q(project_name__icontains=search) | Q(project_address__icontains=search))
     serializer = PreConstructionSearchSerializer(precons, many=True)
 
     if search:
@@ -584,7 +599,7 @@ def get_all_precons_search(request):
 
 @api_view(['GET'])
 def get_all_precons(request):
-    cities = City.objects.all()
+    cities = City.objects.prefetch_related('preconstruction_set').all()
     serializer = CitySerializerSmallSearch(cities, many=True)
     return Response(serializer.data)
 
@@ -709,6 +724,6 @@ def slugify_all_news(request):
 def PreConstructionsDeveloper(request, slug):
     developer = Developer.objects.get(slug=slug)
     dev_serializer = DeveloperSerializer(developer)
-    preconstructions = PreConstruction.objects.filter(developer__slug=slug)
+    preconstructions = PreConstruction.objects.select_related('city', 'developer').prefetch_related('image').filter(developer__slug=slug)
     serializer = PreConstructionSerializerSmall(preconstructions, many=True)
     return Response({"developer": dev_serializer.data, "precons": serializer.data})
